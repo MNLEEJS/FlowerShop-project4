@@ -5,5 +5,6 @@ public class TestF {
 		
 		System.out.println("나겸 커밋 확인");
 		System.out.println("아현 커밋 확인");
+		System.out.println("아현 cut");
 	}
 }
