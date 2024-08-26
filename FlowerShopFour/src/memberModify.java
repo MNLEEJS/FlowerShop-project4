@@ -5,6 +5,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,8 +18,9 @@ public class memberModify extends JDialog {
 
 	public memberModify() {
 		JPanel pnl = new JPanel();
-
+		
 		JLabel lbl = makeJ.라벨만들기("회원 정보 수정", f.font2, 10, 10, 400, 100, pnl);
+		
 		JLabel lblID = makeJ.라벨만들기("아이디", f.font3, 130, 110, 150, 50, pnl);
 		JTextField txtID = makeJ.텍스트필드만들기(10, f.font1, 280, 110, 200, 50, pnl);
 		JLabel lblPW = makeJ.라벨만들기("비밀번호", f.font3, 130, 160, 150, 50, pnl);
@@ -38,6 +40,8 @@ public class memberModify extends JDialog {
 		setLayout(null);
 		setSize(new Dimension(600, 600));
 	}
+	
+	
 	public void 라벨및텍스트만들기(int x, int y, int h, int w, int a, JPanel pnl) {
 		String name = "비밀번호";
 		
