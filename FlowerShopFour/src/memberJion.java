@@ -2,16 +2,19 @@
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+// 작성자 || 이진석
 // 회원가입 클래스
-public class memberJion extends JFrame {
+public class memberJion extends JDialog {
 	FontL f = new FontL();
 	makingJ makeJ = new makingJ();
 
@@ -23,7 +26,20 @@ public class memberJion extends JFrame {
 		int w = 40;
 		라벨및텍스트만들기(x, y, h, w, 6, pnl);
 		JButton btn = makeJ.버튼만들기("회원가입", f.font1, 150, 400, 150, 60, pnl);
+		btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
+				setVisible(false);
+			}
+		});
 		JButton btn1 = makeJ.버튼만들기("뒤로가기", f.font1, 300, 400, 150, 60, pnl);
+		btn1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 
 		pnl.add(btn);
 		pnl.add(btn1);

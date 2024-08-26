@@ -1,6 +1,8 @@
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -18,16 +20,16 @@ public class memberModify extends JDialog {
 
 	public memberModify() {
 		JPanel pnl = new JPanel();
-		
+
 		JLabel lbl = makeJ.라벨만들기("회원 정보 수정", f.font2, 10, 10, 400, 100, pnl);
-		
+
 		JLabel lblID = makeJ.라벨만들기("아이디", f.font3, 130, 110, 150, 50, pnl);
 		JTextField txtID = makeJ.텍스트필드만들기(10, f.font1, 280, 110, 200, 50, pnl);
 		JLabel lblPW = makeJ.라벨만들기("비밀번호", f.font3, 130, 160, 150, 50, pnl);
 		JTextField txtPW = makeJ.텍스트필드만들기(10, f.font1, 280, 160, 200, 50, pnl);
-		JButton btn = makeJ.버튼만들기("확인",f.font1, 480, 110, 100, 100, pnl);
-		
-		int x= 60;
+		JButton btn = makeJ.버튼만들기("확인", f.font1, 480, 110, 100, 100, pnl);
+
+		int x = 60;
 		int y = 220;
 		int h = 200;
 		int w = 50;
@@ -40,11 +42,9 @@ public class memberModify extends JDialog {
 		setLayout(null);
 		setSize(new Dimension(600, 600));
 	}
-	
-	
+
 	public void 라벨및텍스트만들기(int x, int y, int h, int w, int a, JPanel pnl) {
 		String name = "비밀번호";
-		
 		for (int i = 0; i < a; i++) {
 			if (i == 1) {
 				name = "비밀번호 확인";
@@ -54,14 +54,30 @@ public class memberModify extends JDialog {
 				name = "휴대폰 번호";
 			} else if (i == 4) {
 				name = "주소";
-			} 
+			}
 			makeJ.라벨만들기(name, f.font1, x, y, h, w, pnl);
 			JTextField txt = makeJ.텍스트필드만들기(15, f.font1, x + 200, y, h, w, pnl);
+			String name1 = name;
+			txt.addFocusListener(new FocusListener() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					if (txt.getText().isEmpty()) 
+						txt.setText(name1);
+					
+				}
+
+				@Override
+				public void focusGained(FocusEvent e) {
+					if(txt.getText().equals(name1)) 
+						txt.setText(" ");
+					
+				}
+			});
 			if (i != 1) {
 				makeJ.체크박스만들기(10, y, 50, 50, pnl);
 				y += 50;
-			}else {
-				y+=50;
+			} else {
+				y += 50;
 			}
 		}
 	}

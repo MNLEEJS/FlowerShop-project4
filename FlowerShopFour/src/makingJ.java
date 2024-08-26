@@ -5,7 +5,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+//작성자 || 이진석
 public class makingJ {
 	//									라벨명				//폰트		/x축		/y축	/가로길이	/세로길이		/패널
 	public JLabel 라벨만들기(String name, Font font, int x, int y, int h, int w, JPanel pnl) {
