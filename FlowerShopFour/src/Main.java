@@ -16,7 +16,8 @@ public class Main extends JFrame {
 	makingJ j = new makingJ();
 	memberJion mj = new memberJion();
 	memberModify mM = new memberModify();
-	FlowerProduct FP= new FlowerProduct(" ");
+	FlowerProduct FP = new FlowerProduct(" ");
+	ManagerWindow MW = new ManagerWindow();
 	FontL f = new FontL();
 	public JPanel pnl3;
 	public JPanel pnl2;
@@ -40,8 +41,8 @@ public class Main extends JFrame {
 		pnl2.setLayout(null);
 		pnl2.setBounds(600, 0, 600, 500);
 		getContentPane().add(pnl2);
-
-		ImageIcon icon1 = new ImageIcon("src/image/예시1.jpg");
+		
+		ImageIcon icon1 = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
 		JButton photo = j.버튼만들기(null, f.font1, 0, 0, 500, 450, pnl2);
 		photo.setIcon(icon1);
 		photo.addActionListener(new ActionListener() {
@@ -68,11 +69,21 @@ public class Main extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(txtID.getText().equals("이나겸") && txtPW.getText().equals("123")) {
+					txtID.setText(" ");
+					txtPW.setText(" ");
 					pnl1.setVisible(false);
 					pnl3.setVisible(true);
-				} else {
+				} else if(txtID.getText().equals("이아현") && txtPW.getText().equals("123")){
+					setVisible(false);
+					txtID.setText(" ");
+					txtPW.setText(" ");
+					MW.setVisible(true);
+					
+					setVisible(true);
+				}else {
 					JOptionPane.showMessageDialog(null, " 아이디 비밀번호 확인 바람 ");
 				}
+				
 			}
 		});
 		// 회원가입 버튼

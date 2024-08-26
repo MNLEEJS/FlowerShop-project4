@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,7 +18,7 @@ import javax.swing.JTextField;
 // 작업자 : 이아현
 
 // 관리자 페이지 
-public class OwnerPageFrame extends JFrame {
+public class OwnerPageFrame extends JDialog {
 	FontL f = new FontL();
 	makingJ j = new makingJ();
 	JCheckBox c = new JCheckBox();
@@ -51,7 +52,7 @@ public class OwnerPageFrame extends JFrame {
 			}
 			// 컬럼 개수대로 체크박스 생성
 			j.체크박스만들기(50, y, 50, 50, pnl);
-			
+
 			// 컬럼 개수대로 라벨 생성
 			JLabel lbl = j.라벨만들기(name, f.font1, x, y, h, w, pnl);
 
@@ -64,7 +65,7 @@ public class OwnerPageFrame extends JFrame {
 			// 텍스트 필드의 정보 입력창
 			txt1.setText("남은 수량");
 			txt2.setText("가격");
-			
+
 			// 텍스트 필드
 			txt1.addFocusListener(new FocusListener() {
 
@@ -106,21 +107,15 @@ public class OwnerPageFrame extends JFrame {
 			setLayout(null);
 			setSize(new Dimension(700, 600));
 
-	image.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ColumnImage columnImage = new ColumnImage();
-				columnImage.setVisible(true);
-				
-			}
-		});
-		}
-		
-		
-	}
+			image.addActionListener(new ActionListener() {
 
-	public static void main(String[] args) {
-		new OwnerPageFrame().setVisible(true);
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ColumnImage columnImage = new ColumnImage();
+					columnImage.setVisible(true);
+
+				}
+			});
+		}
 	}
 }

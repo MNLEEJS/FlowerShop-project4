@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,16 +18,14 @@ import javax.swing.JPanel;
 // 작업자 : 이나겸
 // 관리자 화면의 판매 확인 페이지 GUI 구현
 
-public class ManagerSellingCheck extends JFrame {
+public class ManagerSellingCheck extends JDialog {
 	makingJ j = new makingJ();
 	FontL font = new FontL();
 
 	public ManagerSellingCheck() {
-		super("관리자 판매 확인"); // 창 이름
 
 		setSize(new Dimension(900, 500));
 		setLayout(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 // <관리자 화면의 판매 확인 페이지>------------------------------------------------------------------------------------------
 
@@ -100,7 +99,5 @@ public class ManagerSellingCheck extends JFrame {
 		});
 	}
 
-	public static void main(String[] args) {
-		new ManagerSellingCheck().setVisible(true);
-	}
+
 }

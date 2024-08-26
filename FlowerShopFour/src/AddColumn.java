@@ -2,6 +2,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -9,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-public class AddColumn extends JFrame {
+public class AddColumn extends JDialog {
 	// makingJ, FontL 선언으로 메소드 사용 가능
 	makingJ j = new makingJ();
 	FontL f = new FontL();
@@ -56,7 +57,5 @@ public class AddColumn extends JFrame {
 
 	}
 
-	public static void main(String[] args) {
-		new AddColumn().setVisible(true);
-	}
+	
 }

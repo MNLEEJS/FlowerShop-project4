@@ -11,18 +11,18 @@ import javax.swing.JPanel;
 public class FlowerProduct extends JDialog {
 	makingJ j = new makingJ();
 	FontL f = new FontL();
-	ImageIcon icon = new ImageIcon("src/image/예시1.jpg");
+	ImageIcon icon = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
 
 	// name = 카테고리명 btn.getText();
 	public ImageIcon NewIcon(String name) {
 		if (name.equals("카테고리1")) {
-			ImageIcon icon = new ImageIcon("src/image/예시1.jpg");
+			ImageIcon icon = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
 		} else if (name.equals("카테고리2")) {
-			ImageIcon icon = new ImageIcon("src/image/예시1.jpg");
+			ImageIcon icon = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
 		} else if (name.equals("카테고리3")) {
-			ImageIcon icon = new ImageIcon("src/image/예시1.jpg");
+			ImageIcon icon = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
 		} else if (name.equals("카테고리4")) {
-			ImageIcon icon = new ImageIcon("src/image/예시1.jpg");
+			ImageIcon icon = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
 		}
 		return icon;
 	}

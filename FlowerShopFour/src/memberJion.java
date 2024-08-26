@@ -17,9 +17,10 @@ import javax.swing.JTextField;
 public class memberJion extends JDialog {
 	FontL f = new FontL();
 	makingJ makeJ = new makingJ();
-
+	
 	public memberJion() {
 		JPanel pnl = new JPanel();
+		setModal(true);
 		int x = 100;
 		int y = 50;
 		int h = 400;

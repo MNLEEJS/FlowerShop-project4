@@ -4,27 +4,32 @@ import java.awt.FlowLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.SwingConstants;
 
 // 작업자 : 이나겸
 // 관리자 화면의 메인 페이지 GUI 구현
 
-public class ManagerWindow extends JFrame {
+public class ManagerWindow extends JDialog{
+	OwnerPageFrame OPF = new OwnerPageFrame();
+	AddColumn AC = new AddColumn();
+	ManagerSellingCheck MSC = new ManagerSellingCheck() ;
 	makingJ j = new makingJ();
 	FontL font = new FontL();
-
+	
 	public ManagerWindow() {
-		super("관리자"); // 창 이름
-
+		setModal(true);
 		setSize(new Dimension(500, 500));
 		setLayout(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 // <관리자 화면의 메인 페이지>---------------------------------------------------------------------------------------------------
 
 		JPanel pnlBase = new JPanel(); // 메인 페이지의 요소들이 다 들어가는 토대 패널
@@ -75,6 +80,13 @@ public class ManagerWindow extends JFrame {
 
 		// JButton 생성 메소드 호출
 		JButton btnOut = j.버튼만들기("나가기", font.font4, 310, 390, 120, 40, pnlBase);
+		btnOut.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+//				M.setVisible(true);
+				setVisible(false);
+			}
+		});
 
 		// 일정한 간격을 두고 JButton 생성하기
 		int btnX = 17; // x 좌표 초기값 (맨 위에 있는 버튼)
@@ -83,24 +95,44 @@ public class ManagerWindow extends JFrame {
 		int btnHeight = 40; // 세로 초기값 (맨 위에 있는 버튼)
 		int btnCount = 4; // for문이 돌아갈 횟수 (생성할 버튼 개수)
 
-		String btnName = "카테고리 추가"; // 버튼 이름 초기값 (맨 위에 있는 버튼)
+		String btnName ; // 버튼 이름 초기값 (맨 위에 있는 버튼)
 
 		for (int i = 0; i < btnCount; i++) {
-			if (i == 1) {
+			
+			if (i == 0) {
+				btnName= "카테고리 추가";
+				JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
+				btn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AC.setVisible(true);
+					}
+				});
+			} else if (i == 1) {
 				btnName = "카테고리 수정";
-
+				JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
+				btn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						OPF.setVisible(true);
+					}
+				});
 			} else if (i == 2) {
 				btnName = "현재 주문 상품";
-
+				JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
+				btn.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						MSC.setVisible(true);						
+					}
+				});
 			} else if (i == 3) {
 				btnName = "과거 주문 상품";
+				JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
 			}
-			JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
+
 			btnY += 70;
 		}
-	}
-	
-	public static void main(String[] args) {
-		new ManagerWindow().setVisible(true);
 	}
 }
