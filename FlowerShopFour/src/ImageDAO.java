@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 
 // 작업자 : 이나겸
+// flower_pic 테이블의 컬럼별 선언, Mapper, CRUD 구성하는 코드 작성
 
 //flower_pic 테이블 컬럼별 선언
 @Data
@@ -41,7 +42,6 @@ class ImageMapper implements IResultMapper<Image> {
 	}
 }
 
-// mapping
 class ImageService {
 	private static final IResultMapper<Image> imageMapper = new ImageMapper();
 	private ImageDAO imageDAO;
@@ -148,16 +148,16 @@ public class ImageDAO {
 	// flower_pic 테이블의 각 컬럼에 값을 insert해주는 메소드
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
-	public int insert(int no, String code) {
-		String sql = "insert into flower_pic (no, code) values (?, ?)";
+	public int insert(String code) {
+		String sql = "insert into flower_pic (code) values (?)";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
 		try {
+			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, no);
-			stmt.setString(2, code);
+			stmt.setString(1, code);
 
 			int result = stmt.executeUpdate();
 

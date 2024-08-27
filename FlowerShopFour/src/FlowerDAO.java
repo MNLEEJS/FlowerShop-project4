@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 
 // 작업자 : 이나겸
+// flower 테이블의 컬럼별 선언, Mapper, CRUD 구성하는 코드 작성
 
 // flower 테이블 컬럼별 선언
 @Data
@@ -53,7 +54,6 @@ class FlowerMapper implements IResultMapper<Flower> {
 	}
 }
 
-// mapping
 class FlowerService {
 	private static final IResultMapper<Flower> flowerMapper = new FlowerMapper();
 	private FlowerDAO flowerDAO;

@@ -5,17 +5,59 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import dbutil.DBUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+// 작업자 : 이아현
+// membership 테이블의 컬럼별 선언, Mapper, CRUD 구성하는 코드 작성
+
+//membership 테이블 컬럼별 선언
+@Data
+@AllArgsConstructor
+@Builder
+class Membership {
+	private int no;
+	private String name;
+	private String phonenumber;
+	private String id;
+	private String pw;
+	private String address;
+}
+
+//Mapper
+class MembershipMapper implements IResultMapper<Membership> {
+
+	@Override
+	public Membership resultMapping(ResultSet rs) {
+		try {
+			int no = rs.getInt("no");
+			String name = rs.getString("name");
+			String phoneNumber = rs.getString("phoneNumber");
+			String id = rs.getString("id");
+			String pw = rs.getString("pw");
+			String address = rs.getString("address");
+
+			return Membership.builder().no(no).name(name).phonenumber(phoneNumber).id(id).pw(pw).address(address)
+					.build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			throw new RuntimeException("Flower 매핑 중 예외 발생", e);
+		}
+	}
+}
 
 // 회원정보를 찾기 위해 기본키인 no로 구분하여 출력
 public class MemberInfo {
 	public Membership findByPk(String pk1, int pk, String column, String id, String phoneNumber, String address) {
 		MembershipMapper membershipMapper = new MembershipMapper();
 		String subject = "";
-		if(id.length()!=0) {
-			subject = "id";			
-		}
-		else if(phoneNumber.length()!=0) {
-			subject = "phoneNumber";			
+		if (id.length() != 0) {
+			subject = "id";
+		} else if (phoneNumber.length() != 0) {
+			subject = "phoneNumber";
 
 		}
 		String sql = "SELECT * FROM membership WHERE " + subject + " = ?";
@@ -29,7 +71,7 @@ public class MemberInfo {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, column);
-			
+
 //			if(subject.equals("no"))
 //				stmt.setInt(1, "no");
 //			else if(subject.equals("id"))
@@ -58,12 +100,45 @@ public class MemberInfo {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeAll(rs, stmt, conn);
-		} 
+		}
 		return null;
 	}
 
-	public int insert(int no, String name, String phoneNumber, String id, String pw, String address) {
-		String sql = "INSERT INTO membership(no, name, phoneNumber, id, pw, address) VALUES (?, ?, ?, ?, ?, ?);";
+	// 행 추가 (insert)
+	// flower 테이블의 각 컬럼에 값을 insert해주는 메소드
+	// insert가 정상적으로 되면 return 1
+	// insert가 정상적으로 되지않으면 return -1
+	public int insert(String name, String phoneNumber, String id, String pw, String address) {
+		String sql = "INSERT INTO membership(name, phoneNumber, id, pw, address) VALUES (?, ?, ?, ?, ?);";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, name);
+			stmt.setString(2, phoneNumber);
+			stmt.setString(3, id);
+			stmt.setString(4, pw);
+			stmt.setString(5, address);
+
+			int result = stmt.executeUpdate();
+
+			return 1;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(null, stmt, null);
+		}
+		return -1;
+	}
+
+	public int update(int no, String name, String phoneNumber, String id, String pw, String address) {
+		String sql = "Update membership set no = ?, name = ?, phoneNumber = ?, pw = ?, address = ? where id = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -76,9 +151,9 @@ public class MemberInfo {
 			stmt.setInt(1, no);
 			stmt.setString(2, name);
 			stmt.setString(3, phoneNumber);
-			stmt.setString(4, id);
-			stmt.setString(5, pw);
-			stmt.setString(6, address);
+			stmt.setString(4, pw);
+			stmt.setString(5, address);
+			stmt.setString(6, id);
 
 			int result = stmt.executeUpdate();
 			if (result == 1) {
@@ -93,37 +168,4 @@ public class MemberInfo {
 		}
 		return -1;
 	}
-
-
-public int update(int no, String name, String phoneNumber, String id, String pw, String address) {
-	String sql = "Update membership set no = ?, name = ?, phoneNumber = ?, pw = ?, address = ? where id = ?";
-
-	Connection conn = null;
-	PreparedStatement stmt = null;
-	ResultSet rs = null;
-
-	try {
-		conn = DBUtil.getConnection("project3");
-
-		stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		stmt.setInt(1, no);
-		stmt.setString(2, name);
-		stmt.setString(3, phoneNumber);
-		stmt.setString(4, pw);
-		stmt.setString(5, address);
-		stmt.setString(6, id);
-		
-		int result = stmt.executeUpdate();
-		if (result == 1) {
-			rs = stmt.getGeneratedKeys();
-			rs.next();
-			return rs.getInt(1);
-		}
-	} catch (SQLException e) {
-		e.printStackTrace();
-	} finally {
-		DBUtil.closeAll(rs, stmt, null);
-	}
-	return -1;
-}
 }
