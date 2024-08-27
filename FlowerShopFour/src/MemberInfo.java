@@ -62,34 +62,29 @@ public class MemberInfo {
 		return null;
 	}
 
-	public int insert(int no, String name, String phoneNumber, String id, String pw, String address) {
-		String sql = "INSERT INTO membership(no, name, phoneNumber, id, pw, address) VALUES (?, ?, ?, ?, ?, ?);";
+	public int insert(String name, String phoneNumber, String id, String pw, String address) {
+		String sql = "INSERT INTO membership(name, phoneNumber, id, pw, address) VALUES (?, ?, ?, ?, ?);";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection("project3");
 
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			stmt.setInt(1, no);
-			stmt.setString(2, name);
-			stmt.setString(3, phoneNumber);
-			stmt.setString(4, id);
-			stmt.setString(5, pw);
-			stmt.setString(6, address);
+			stmt.setString(1, name);
+			stmt.setString(2, phoneNumber);
+			stmt.setString(3, id);
+			stmt.setString(4, pw);
+			stmt.setString(5, address);
 
-			int result = stmt.executeUpdate();
-			if (result == 1) {
-				rs = stmt.getGeneratedKeys();
-				rs.next();
-				return rs.getInt(1);
-			}
+			return stmt.executeUpdate();
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.closeAll(rs, stmt, null);
+			DBUtil.closeAll(null, stmt, conn);
 		}
 		return -1;
 	}
