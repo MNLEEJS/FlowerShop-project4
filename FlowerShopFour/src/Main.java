@@ -69,14 +69,14 @@ public class Main extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(txtID.getText().equals("이나겸") && txtPW.getText().equals("123")) {
-					txtID.setText(" ");
-					txtPW.setText(" ");
+					txtID.setText("");
+					txtPW.setText("");
 					pnl1.setVisible(false);
 					pnl3.setVisible(true);
 				} else if(txtID.getText().equals("이아현") && txtPW.getText().equals("123")){
 					setVisible(false);
-					txtID.setText(" ");
-					txtPW.setText(" ");
+					txtID.setText("");
+					txtPW.setText("");
 					MW.setVisible(true);
 					
 					setVisible(true);
@@ -118,8 +118,8 @@ public class Main extends JFrame {
 		btnOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				txtID.setText(" ");
-				txtPW.setText(" ");
+				txtID.setText("");
+				txtPW.setText("");
 				pnl1.setVisible(true);
 				pnl3.setVisible(false);
 			}

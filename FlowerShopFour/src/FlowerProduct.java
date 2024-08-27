@@ -28,6 +28,7 @@ public class FlowerProduct extends JDialog {
 	}
 
 	public FlowerProduct(String name) {
+		setModal(true);
 		JPanel pnl = new JPanel();
 		ImageIcon icon = NewIcon(name);
 		JLabel lbl = j.라벨만들기(name, f.font2, 10, 20, 300, 80, pnl);
@@ -84,9 +85,4 @@ public class FlowerProduct extends JDialog {
 
 		}
 	}
-
-	public static void main(String[] args) {
-		new FlowerProduct("카테고리명").setVisible(true);
-	}
-
 }

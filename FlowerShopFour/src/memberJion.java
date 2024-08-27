@@ -4,6 +4,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,12 +14,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 // 작성자 || 이진석
 // 회원가입 클래스
 public class memberJion extends JDialog {
 	FontL f = new FontL();
 	makingJ makeJ = new makingJ();
-	
+	List<JTextField> listTxt = new ArrayList<JTextField>();
+
 	public memberJion() {
 		JPanel pnl = new JPanel();
 		setModal(true);
@@ -30,14 +34,26 @@ public class memberJion extends JDialog {
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
-				setVisible(false);
+				boolean go = false;
+				
+				for (int i = 0; i < listTxt.size(); i++) {
+					System.out.println(listTxt.get(i).getText());
+					go = true;
+				}
+				// insert문 넣고 올바르게 들어가면
+				if (go) {
+					JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
+					setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
+				}
 			}
 		});
 		JButton btn1 = makeJ.버튼만들기("뒤로가기", f.font1, 300, 400, 150, 60, pnl);
 		btn1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "회원가입을 취소합니다.");
 				setVisible(false);
 			}
 		});
@@ -68,7 +84,10 @@ public class memberJion extends JDialog {
 				name = "주소";
 			}
 			makeJ.라벨만들기(name, f.font1, x, y, h, w, pnl);
-			makeJ.텍스트필드만들기(15, f.font1, x + 200, y, h, w, pnl);
+			JTextField txt = makeJ.텍스트필드만들기(15, f.font1, x + 200, y, h, w, pnl);
+			if (i != 1) {
+				listTxt.add(txt);
+			}
 			y += 50;
 		}
 	}

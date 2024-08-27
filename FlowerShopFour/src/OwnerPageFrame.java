@@ -25,6 +25,7 @@ public class OwnerPageFrame extends JDialog {
 
 	// 관리자 페이지의 상단 라벨과 버튼 생성
 	public OwnerPageFrame() {
+		setModal(true);
 		JPanel pnl = new JPanel();
 		int y = 120;
 		int x = 100;
@@ -34,7 +35,7 @@ public class OwnerPageFrame extends JDialog {
 		JLabel lbl1 = j.라벨만들기("관리자 페이지", f.font1, 10, 10, 200, 50, pnl);
 		JLabel lbl2 = j.라벨만들기("카테고리 1", f.font1, 210, 10, 170, 50, pnl);
 
-		JButton btnAddColumn = j.버튼만들기("컬럼추가", f.font1, 370, 10, 140, 50, pnl);
+//		JButton btnAddColumn = j.버튼만들기("컬럼추가", f.font1, 370, 10, 140, 50, pnl);
 		JButton btnCoulumn = j.버튼만들기("컬럼삭제", f.font1, 520, 10, 140, 50, pnl);
 
 		for (int i = 0; i < 6; i++) {
