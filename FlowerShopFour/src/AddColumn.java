@@ -19,8 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class AddColumn extends JDialog {
 
-	
-//	FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "png", "jpg");
+	List<Flower> listF = new ArrayList<Flower>();
 	JFileChooser jfc = new JFileChooser();
 	// makingJ, FontL 선언으로 메소드 사용 가능
 	makingJ j = new makingJ();
@@ -90,8 +89,20 @@ public class AddColumn extends JDialog {
 		JButton btn1 = j.버튼만들기("확인", f.font1, 300, 450, 100, 50, pnl);
 		btn1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (int j = 0; j < listTxt.size(); j++) {
-//					System.out.println(listTxt.get(j).getText());	
+				
+				
+				String category = listTxt.get(0).getText();
+				String name = listTxt.get(1).getText();
+				int count = Integer.valueOf(listTxt.get(2).getText());
+				int price = Integer.valueOf(listTxt.get(3).getText());
+				 
+				FlowerDAO da = new FlowerDAO();
+				int a = da.insert(category, name, count, price, 1);
+				if(a > 0) {
+					JOptionPane.showMessageDialog(null, "성공");
+					setVisible(false);
+				}else {
+					JOptionPane.showMessageDialog(null, "대실패");
 				}
 			}
 		});
