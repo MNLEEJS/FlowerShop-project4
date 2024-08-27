@@ -160,7 +160,7 @@ public class ImageDAO {
 			stmt.setString(2, code);
 
 			int result = stmt.executeUpdate();
-
+			// select문이 와야함
 			return 1;
 
 		} catch (SQLException e) {
