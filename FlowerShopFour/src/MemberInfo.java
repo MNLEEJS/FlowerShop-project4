@@ -8,50 +8,32 @@ import dbutil.DBUtil;
 
 // 회원정보를 찾기 위해 기본키인 no로 구분하여 출력
 public class MemberInfo {
-	public Membership findByPk(String pk1, int pk, String column, String id, String phoneNumber, String address) {
-		MembershipMapper membershipMapper = new MembershipMapper();
-		String subject = "";
-		if(id.length()!=0) {
-			subject = "id";			
-		}
-		else if(phoneNumber.length()!=0) {
-			subject = "phoneNumber";			
+	MembershipMapper membershipMapper = new MembershipMapper();
 
-		}
-		String sql = "SELECT * FROM membership WHERE " + subject + " = ?";
-
+	public Membership findByPk(String pk1, int pk, String column) {
+		String sql = "SELECT * FROM membership WHERE " + column + " = ?";
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection("project3");
-
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, column);
+			// ID = 유니크가 걸어놔서 중복을 허용하지 않아서 하나의 행에 각자다른 ID를 사용해서 조회 가능
+			// NO = primaryKey설정되어있어서 중복 허용하지 않아서 하나의 행에 각자다른 no를 사용해서 조회 가능
 			
-//			if(subject.equals("no"))
-//				stmt.setInt(1, "no");
-//			else if(subject.equals("id"))
-//				stmt.setString(1, "id");
-//			
-			if (pk1 == null) {
-				stmt.setInt(2, pk);
-			} else {
-				stmt.setString(2, pk1);
+			// ID로 조회할경우 ID는 스트링으로 컬럼구성되어 있어 setString 사용
+			if(column.equals("ID")) {
+				stmt.setString(1, pk1);
+			// no로 조회할경우 no는 Int로 구성되어 있기에 setInt 사용
+			}else if (column.equals("no")) {
+				stmt.setInt(1, pk);
 			}
-			// (1 (첫번째 물음표) , pk 값을 삽입함)
 			rs = stmt.executeQuery();
-			// db의 project3과 연결 - 자바에서 db 접근이 가능해서 삽입 삭제가 가능함.
-			// sql문을 실행해서 원하는 결과값을 resultset에 저장해서 전송할 준비가 완료 되었다
-			// executeQuery는 select에서만 사용함
-
-			// 저장한 resultset의 값을 확인해서 membership객체를 만듦
-			// 결과값이 있다면 membership 회원정보 객체 만들어서 저장
 			if (rs.next()) {
-				Membership membership = membershipMapper.resultMapping(rs);
 				// mapper 작업
-
+				Membership membership = membershipMapper.resultMapping(rs);
+				
 				return membership;
 			}
 		} catch (SQLException e) {
@@ -70,7 +52,6 @@ public class MemberInfo {
 
 		try {
 			conn = DBUtil.getConnection("project3");
-
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, name);
 			stmt.setString(2, phoneNumber);
@@ -90,8 +71,8 @@ public class MemberInfo {
 	}
 
 
-public int update(int no, String name, String phoneNumber, String id, String pw, String address) {
-	String sql = "Update membership set no = ?, name = ?, phoneNumber = ?, pw = ?, address = ? where id = ?";
+public int update(String name, String phoneNumber, String id, String pw, String address) {
+	String sql = "Update membership set phoneNumber = ?, pw = ?, address = ? where ID = ?";
 
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -99,14 +80,13 @@ public int update(int no, String name, String phoneNumber, String id, String pw,
 
 	try {
 		conn = DBUtil.getConnection("project3");
-
+		
 		stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		stmt.setInt(1, no);
-		stmt.setString(2, name);
-		stmt.setString(3, phoneNumber);
-		stmt.setString(4, pw);
-		stmt.setString(5, address);
-		stmt.setString(6, id);
+		
+		stmt.setString(1, phoneNumber);
+		stmt.setString(2, pw);
+		stmt.setString(3, address);
+		stmt.setString(4, id);
 		
 		int result = stmt.executeUpdate();
 		if (result == 1) {
