@@ -10,13 +10,24 @@ import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.protocol.x.ResultMessageListener;
 
 import dbutil.DBUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 // 작업자 : 이나겸
-// CRUD 구성
-// flower 테이블의
-// 조회 (select)
-// 행 추가 (insert)
-// 자료 수정(update)
+
+// flower 테이블 컬럼별 선언
+@Data
+@AllArgsConstructor
+@Builder
+class Flower {
+	private int no;
+	private String category;
+	private String name;
+	private int count;
+	private int price;
+	private int image_no;
+}
 
 // Mapper
 class FlowerMapper implements IResultMapper<Flower> {
@@ -42,6 +53,20 @@ class FlowerMapper implements IResultMapper<Flower> {
 	}
 }
 
+// mapping
+class FlowerService {
+	private static final IResultMapper<Flower> flowerMapper = new FlowerMapper();
+	private FlowerDAO flowerDAO;
+
+	// 생성자
+	public FlowerService(FlowerDAO flowerDAO) {
+		super();
+		this.flowerDAO = flowerDAO;
+	}
+}
+
+// CRUD 구성
+// flower 테이블의  조회 (select), 행 추가 (insert), 자료 수정(update)
 public class FlowerDAO {
 	FlowerMapper flowerMapper = new FlowerMapper();
 	Flower flower;
@@ -126,7 +151,7 @@ public class FlowerDAO {
 
 			List<Flower> list = new ArrayList<>();
 			rs = stmt.executeQuery();
-			
+
 			while (rs.next()) {
 				Flower flower = flowerMapper.resultMapping(rs);
 				list.add(flower);
@@ -146,35 +171,30 @@ public class FlowerDAO {
 	// flower 테이블의 각 컬럼에 값을 insert해주는 메소드
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
-	public int insert(int no, String category, String name, int count, int price, int image_no) {
-		String sql = "insert into flower (no, category, name, count, price, image_no) values (?, ?, ?, ?, ?, ?)";
+	public int insert(String category, String name, int count, int price, int image_no) {
+		String sql = "insert into flower (category, name, count, price, image_no) values (?, ?, ?, ?, ?)";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, no);
-			stmt.setString(2, category);
-			stmt.setString(3, name);
-			stmt.setInt(4, count);
-			stmt.setInt(5, price);
-			stmt.setInt(6, image_no);
+			stmt.setString(1, category);
+			stmt.setString(2, name);
+			stmt.setInt(3, count);
+			stmt.setInt(4, price);
+			stmt.setInt(5, image_no);
 
 			int result = stmt.executeUpdate();
 
-			if (result == 1) {
-				rs.next();
-			}
 			return 1;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 
 		} finally {
-			DBUtil.closeAll(rs, stmt, conn);
+			DBUtil.closeAll(null, stmt, conn);
 		}
 		return -1;
 	}

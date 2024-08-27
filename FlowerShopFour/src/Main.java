@@ -16,7 +16,7 @@ public class Main extends JFrame {
 	makingJ j = new makingJ();
 	memberJion mj = new memberJion();
 	memberModify mM = new memberModify();
-	FlowerProduct FP = new FlowerProduct(" ");
+	FlowerProduct FP = new FlowerProduct("");
 	ManagerWindow MW = new ManagerWindow();
 	FontL f = new FontL();
 	public JPanel pnl3;
