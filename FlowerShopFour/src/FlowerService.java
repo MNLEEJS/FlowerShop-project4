@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class FlowerService {
 	private static final IResultMapper<Flower> flowerMapper = new FlowerMapper();
 	private FlowerDAO flowerDAO;
-	
+
 	// 생성자
 	public FlowerService(FlowerDAO flowerDAO) {
 		super();
