@@ -7,12 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dbutil.DBUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 // 작업자 : 이나겸
-// CRUD 구성
-// flower_pic 테이블의
-// 조회 (select)
-// 행 추가 (insert)
+
+//flower_pic 테이블 컬럼별 선언
+@Data
+@AllArgsConstructor
+@Builder
+class Image {
+	private int no;
+	private String code;
+}
 
 // Mapper
 class ImageMapper implements IResultMapper<Image> {
@@ -33,6 +41,20 @@ class ImageMapper implements IResultMapper<Image> {
 	}
 }
 
+// mapping
+class ImageService {
+	private static final IResultMapper<Image> imageMapper = new ImageMapper();
+	private ImageDAO imageDAO;
+
+	// 생성자
+	public ImageService(ImageDAO imageDAO) {
+		super();
+		this.imageDAO = imageDAO;
+	}
+}
+
+// CRUD 구성
+// flower_pic 테이블의  조회 (select), 행 추가 (insert), 자료 수정(update)
 public class ImageDAO {
 	ImageMapper imageMapper = new ImageMapper();
 	Image image;
@@ -131,7 +153,6 @@ public class ImageDAO {
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -140,16 +161,13 @@ public class ImageDAO {
 
 			int result = stmt.executeUpdate();
 
-			if (result == 1) {
-				rs.next();
-			}
 			return 1;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 
 		} finally {
-			DBUtil.closeAll(rs, stmt, conn);
+			DBUtil.closeAll(null, stmt, conn);
 		}
 		return -1;
 	}
