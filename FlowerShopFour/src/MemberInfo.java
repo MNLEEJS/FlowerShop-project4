@@ -8,11 +8,16 @@ import dbutil.DBUtil;
 
 // 회원정보를 찾기 위해 기본키인 no로 구분하여 출력
 public class MemberInfo {
-	public Membership findByPk(String pk1, int pk, String column, String id, String phoneNumber
-			, String address) {
+	public Membership findByPk(String pk1, int pk, String column, String id, String phoneNumber, String address) {
 		MembershipMapper membershipMapper = new MembershipMapper();
 		String subject = "";
-		subject = "id";
+		if(id.length()!=0) {
+			subject = "id";			
+		}
+		else if(phoneNumber.length()!=0) {
+			subject = "phoneNumber";			
+
+		}
 		String sql = "SELECT * FROM membership WHERE " + subject + " = ?";
 
 		Connection conn = null;
@@ -22,9 +27,14 @@ public class MemberInfo {
 		try {
 			conn = DBUtil.getConnection("project3");
 
-			// 작성한 sql문을 연결해서 db에 값들을 보낼 준비함
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, column);
+			
+//			if(subject.equals("no"))
+//				stmt.setInt(1, "no");
+//			else if(subject.equals("id"))
+//				stmt.setString(1, "id");
+//			
 			if (pk1 == null) {
 				stmt.setInt(2, pk);
 			} else {
@@ -41,12 +51,6 @@ public class MemberInfo {
 			if (rs.next()) {
 				Membership membership = membershipMapper.resultMapping(rs);
 				// mapper 작업
-//				int no = rs.getInt("no");
-//				String name = rs.getString("name");
-//				String phoneNumber = rs.getString("phoneNumber");
-//				String id = rs.getString("id");
-//				String pw = rs.getString("pw");
-//				String address = rs.getString("address");
 
 				return membership;
 			}
@@ -54,8 +58,7 @@ public class MemberInfo {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeAll(rs, stmt, conn);
-		} // conn은 db를 연결해주는 역할인데 연결종료도 필요함.
-			// 자원해제 계속 해줄 수 없으니 굳이 끊어버리지 않고 있는 연결을 사용해서 아래 insert에 파라미터값으로 넣어줌
+		} 
 		return null;
 	}
 
@@ -90,4 +93,37 @@ public class MemberInfo {
 		}
 		return -1;
 	}
+
+
+public int update(int no, String name, String phoneNumber, String id, String pw, String address) {
+	String sql = "Update membership set no = ?, name = ?, phoneNumber = ?, pw = ?, address = ? where id = ?";
+
+	Connection conn = null;
+	PreparedStatement stmt = null;
+	ResultSet rs = null;
+
+	try {
+		conn = DBUtil.getConnection("project3");
+
+		stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		stmt.setInt(1, no);
+		stmt.setString(2, name);
+		stmt.setString(3, phoneNumber);
+		stmt.setString(4, pw);
+		stmt.setString(5, address);
+		stmt.setString(6, id);
+		
+		int result = stmt.executeUpdate();
+		if (result == 1) {
+			rs = stmt.getGeneratedKeys();
+			rs.next();
+			return rs.getInt(1);
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+	} finally {
+		DBUtil.closeAll(rs, stmt, null);
+	}
+	return -1;
+}
 }
