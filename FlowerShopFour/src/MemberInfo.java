@@ -2,14 +2,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import dbutil.DBUtil;
 
 // 회원정보를 찾기 위해 기본키인 no로 구분하여 출력
 public class MemberInfo {
-	public Membership findByPk(int pk) {
+	public Membership findByPk(String pk1, int pk, String column, String id, String phoneNumber
+			, String address) {
 		MembershipMapper membershipMapper = new MembershipMapper();
-		String sql = "SELECT * FROM membership WHERE no = ?";
+		String subject = "";
+		subject = "id";
+		String sql = "SELECT * FROM membership WHERE " + subject + " = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -20,7 +24,12 @@ public class MemberInfo {
 
 			// 작성한 sql문을 연결해서 db에 값들을 보낼 준비함
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, pk);
+			stmt.setString(1, column);
+			if (pk1 == null) {
+				stmt.setInt(2, pk);
+			} else {
+				stmt.setString(2, pk1);
+			}
 			// (1 (첫번째 물음표) , pk 값을 삽입함)
 			rs = stmt.executeQuery();
 			// db의 project3과 연결 - 자바에서 db 접근이 가능해서 삽입 삭제가 가능함.
@@ -50,9 +59,35 @@ public class MemberInfo {
 		return null;
 	}
 
-	public void insert(String name, String phoneNumber) {
+	public int insert(int no, String name, String phoneNumber, String id, String pw, String address) {
+		String sql = "INSERT INTO membership(no, name, phoneNumber, id, pw, address) VALUES (?, ?, ?, ?, ?, ?);";
 
-// 사용자 입력값을 받는다
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
+		try {
+			conn = DBUtil.getConnection("project3");
+
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, no);
+			stmt.setString(2, name);
+			stmt.setString(3, phoneNumber);
+			stmt.setString(4, id);
+			stmt.setString(5, pw);
+			stmt.setString(6, address);
+
+			int result = stmt.executeUpdate();
+			if (result == 1) {
+				rs = stmt.getGeneratedKeys();
+				rs.next();
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, null);
+		}
+		return -1;
 	}
 }
