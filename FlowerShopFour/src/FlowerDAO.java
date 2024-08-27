@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 
 // 작업자 : 이나겸
+// flower 테이블의 컬럼별 선언, Mapper, CRUD 구성하는 코드 작성
 
 // flower 테이블 컬럼별 선언
 @Data
@@ -27,6 +28,7 @@ class Flower {
 	private int count;
 	private int price;
 	private int image_no;
+	
 }
 
 // Mapper
@@ -53,7 +55,6 @@ class FlowerMapper implements IResultMapper<Flower> {
 	}
 }
 
-// mapping
 class FlowerService {
 	private static final IResultMapper<Flower> flowerMapper = new FlowerMapper();
 	private FlowerDAO flowerDAO;
@@ -70,7 +71,7 @@ class FlowerService {
 public class FlowerDAO {
 	FlowerMapper flowerMapper = new FlowerMapper();
 	Flower flower;
-
+	ImageDAO dao = new ImageDAO();
 	// 조회 (select)
 	// flower 테이블의 전체 컬럼 조회
 	public Flower selectAll() {
@@ -171,12 +172,12 @@ public class FlowerDAO {
 	// flower 테이블의 각 컬럼에 값을 insert해주는 메소드
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
-	public int insert(String category, String name, int count, int price, int image_no) {
+	public int insert(String category, String name, int count, int price, String code) {
 		String sql = "insert into flower (category, name, count, price, image_no) values (?, ?, ?, ?, ?)";
-
+		int image_no = dao.insert(code);
 		Connection conn = null;
 		PreparedStatement stmt = null;
-
+		
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);

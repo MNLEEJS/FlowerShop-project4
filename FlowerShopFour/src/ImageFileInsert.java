@@ -8,7 +8,7 @@ import java.util.Base64.Encoder;
 
 public class ImageFileInsert {
 	
-	public void ImageFile(String code) {
+	public String ImageFile(String code) {
 		Path path = Paths.get(code);
 //		System.out.println(code);
 		try {
@@ -16,12 +16,13 @@ public class ImageFileInsert {
 			Encoder encoder = Base64.getEncoder();
 			String coding = encoder.encodeToString(readAllBytes);
 			// intsert 메소드만 하면 끝
-			
+			return coding;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		return null;
 	}
 }

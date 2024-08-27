@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 
 // 작업자 : 이나겸
+// flower_pic 테이블의 컬럼별 선언, Mapper, CRUD 구성하는 코드 작성
 
 //flower_pic 테이블 컬럼별 선언
 @Data
@@ -41,7 +42,6 @@ class ImageMapper implements IResultMapper<Image> {
 	}
 }
 
-// mapping
 class ImageService {
 	private static final IResultMapper<Image> imageMapper = new ImageMapper();
 	private ImageDAO imageDAO;
@@ -114,6 +114,29 @@ public class ImageDAO {
 
 	// pk로 조회 (select)
 	// flower_pic 테이블의 pk : no
+	//SELECT LAST_INSERT_ID()
+	
+	public int LastID(Connection conn) {
+		String sql = "SELECT LAST_INSERT_ID()";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int a = rs.getInt(1);
+				return a;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, null);
+		}
+		return -1;
+	}
+	
 	public List<Image> findByNo(int no) {
 		String sql = "select no, code from flower_pic where = ?";
 
@@ -125,7 +148,6 @@ public class ImageDAO {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, no);
-
 			List<Image> list = new ArrayList<>();
 			rs = stmt.executeQuery();
 
@@ -148,20 +170,21 @@ public class ImageDAO {
 	// flower_pic 테이블의 각 컬럼에 값을 insert해주는 메소드
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
-	public int insert(int no, String code) {
-		String sql = "insert into flower_pic (no, code) values (?, ?)";
+	public int insert(String code) {
+		String sql = "insert into flower_pic (code) values (?)";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
 		try {
+			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, no);
-			stmt.setString(2, code);
+			stmt.setString(1, code);
 
 			int result = stmt.executeUpdate();
-
-			return 1;
+			
+			int picNumber = LastID(conn);
+			return picNumber;
 
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -23,7 +23,7 @@ public class ManagerSellingCheck extends JDialog {
 	FontL font = new FontL();
 
 	public ManagerSellingCheck() {
-
+		setModal(true);
 		setSize(new Dimension(900, 500));
 		setLayout(null);
 

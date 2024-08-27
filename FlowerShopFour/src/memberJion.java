@@ -18,9 +18,11 @@ import javax.swing.JTextField;
 // 작성자 || 이진석
 // 회원가입 클래스
 public class memberJion extends JDialog {
+	MemberInfo info = new MemberInfo();
 	FontL f = new FontL();
 	makingJ makeJ = new makingJ();
 	List<JTextField> listTxt = new ArrayList<JTextField>();
+	List<JTextField> listPW = new ArrayList<JTextField>();
 
 	public memberJion() {
 		JPanel pnl = new JPanel();
@@ -34,19 +36,34 @@ public class memberJion extends JDialog {
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				boolean go = false;
 				
-				for (int i = 0; i < listTxt.size(); i++) {
-					System.out.println(listTxt.get(i).getText());
-					go = true;
-				}
-				// insert문 넣고 올바르게 들어가면
-				if (go) {
-					JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
-					setVisible(false);
-				} else {
+				String id = listTxt.get(0).getText();
+				String pw = listTxt.get(1).getText();
+				String pw2 = listPW.get(0).getText();
+				String name = listTxt.get(2).getText();
+				String phoneNumber = listTxt.get(3).getText();
+				String address = listTxt.get(4).getText();
+				// 같은 ID를 가지고 있는 유저가 존재하는지 찾아야함;
+				
+				
+				if (id.length() < 5 && pw.length() < 5 && name.length() < 2 
+						&& phoneNumber.length() < 13
+						&& address.length() < 5) {
 					JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
+				} else if (pw.equals(pw2)) {
+					JOptionPane.showMessageDialog(null, "비밀번호를 다시확인해주세요");
+				} else {
+					int a = info.insert(name, phoneNumber, id, pw, address);
+					// insert문 넣고 올바르게 들어가면
+					if (a > 0) {
+						JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
+						setVisible(false);
+					} else {
+						JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
+					}
+					
 				}
+
 			}
 		});
 		JButton btn1 = makeJ.버튼만들기("뒤로가기", f.font1, 300, 400, 150, 60, pnl);
@@ -87,6 +104,8 @@ public class memberJion extends JDialog {
 			JTextField txt = makeJ.텍스트필드만들기(15, f.font1, x + 200, y, h, w, pnl);
 			if (i != 1) {
 				listTxt.add(txt);
+			} else {
+				listPW.add(txt);
 			}
 			y += 50;
 		}
