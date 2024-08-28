@@ -18,19 +18,6 @@ import lombok.Data;
 // flower 테이블의 컬럼별 선언, Mapper, CRUD 구성하는 코드 작성
 
 // flower 테이블 컬럼별 선언
-@Data
-@AllArgsConstructor
-@Builder
-class Flower {
-	private int no;
-	private String category;
-	private String name;
-	private int count;
-	private int price;
-	private int image_no;
-	
-}
-
 // Mapper
 class FlowerMapper implements IResultMapper<Flower> {
 
@@ -72,37 +59,12 @@ public class FlowerDAO {
 	FlowerMapper flowerMapper = new FlowerMapper();
 	Flower flower;
 	ImageDAO dao = new ImageDAO();
+	
+	
 	// 조회 (select)
 	// flower 테이블의 전체 컬럼 조회
-	public Flower selectAll() {
-		String sql = "select * from flower";
-
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection("project3");
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sql);
-
-			while (rs.next()) {
-				Flower flower = flowerMapper.resultMapping(rs);
-			}
-			return flower;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	// 조회 (select) , List 이용
-	// flower 테이블의 전체 컬럼 조회
-//	public List<Flower> selectAllWithList() {
+//	public Flower selectAll() {
 //		String sql = "select * from flower";
-//
-//		List<Flower> list = new ArrayList<>();
 //
 //		Connection conn = null;
 //		Statement stmt = null;
@@ -115,15 +77,42 @@ public class FlowerDAO {
 //
 //			while (rs.next()) {
 //				Flower flower = flowerMapper.resultMapping(rs);
-//				list.add(flower);
 //			}
-//			return list;
+//			return flower;
 //
 //		} catch (SQLException e) {
 //			e.printStackTrace();
 //		}
 //		return null;
 //	}
+
+	// 조회 (select) , List 이용
+	// flower 테이블의 전체 컬럼 조회
+	public List<Flower> selectAllWithList() {
+		String sql = "select * from flower";
+
+		List<Flower> list = new ArrayList<>();
+
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				Flower flower = flowerMapper.resultMapping(rs);
+				list.add(flower);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	// 조건(where절)에 따라 달라지는 조회 (select)
 	public List<Flower> findBy(String columnName, int no, String name, int image_no) {

@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +22,8 @@ public class Main extends JFrame {
 	FlowerProduct FP = new FlowerProduct("");
 	ManagerWindow MW = new ManagerWindow();
 	MemberInfo Mif = new MemberInfo();
+	List<String> listID1 = Mif.IDseach();
+	List<String> listPW1 = Mif.PWseach();
 	FontL f = new FontL();
 	public JPanel pnl3;
 	public JPanel pnl2;
@@ -35,7 +37,7 @@ public class Main extends JFrame {
 		Main1();
 		Maingo();
 		Maingo2();
-
+		
 		setSize(new Dimension(1200, 500));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -58,7 +60,7 @@ public class Main extends JFrame {
 		pnl2.add(photo);
 	}
 
-	private void Maingo() {
+	private void Maingo()  {
 		pnl1 = new JPanel();
 		JLabel lbl12 = j.라벨만들기("돼지 꽃집 메인화면", f.font2, 0, 10, 600, 100, pnl1);
 		// 아이디
@@ -68,8 +70,6 @@ public class Main extends JFrame {
 		JLabel lblPW = j.라벨만들기("비밀번호", f.font1, 80, 200, 150, 30, pnl1);
 		txtPW = j.텍스트필드만들기(15, null, 200, 200, 100, 30, pnl1);
 		// 로그인 버튼
-		List<String> listID1 = Mif.IDseach();
-		List<String> listPW1 = Mif.PWseach();
 		System.out.println(listID1.size());
 		System.out.println(listPW1.size());
 		JButton btnLogin = j.버튼만들기("로그인", f.font1, 0, 300, 200, 100, pnl1);

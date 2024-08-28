@@ -50,7 +50,7 @@ public class memberJion extends JDialog {
 						&& phoneNumber.length() < 13
 						&& address.length() < 5) {
 					JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
-				} else if (pw.equals(pw2)) {
+				} else if (!pw.equals(pw2)) {
 					JOptionPane.showMessageDialog(null, "비밀번호를 다시확인해주세요");
 				} else {
 					int a = info.insert(name, phoneNumber, id, pw, address);

@@ -114,8 +114,8 @@ public class ImageDAO {
 
 	// pk로 조회 (select)
 	// flower_pic 테이블의 pk : no
-	//SELECT LAST_INSERT_ID()
-	
+	// SELECT LAST_INSERT_ID()
+
 	public int LastID(Connection conn) {
 		String sql = "SELECT LAST_INSERT_ID()";
 
@@ -136,9 +136,9 @@ public class ImageDAO {
 		}
 		return -1;
 	}
-	
-	public List<Image> findByNo(int no) {
-		String sql = "select no, code from flower_pic where = ?";
+
+	public String findByNo(int no) {
+		String sql = "select * from flower_pic where no = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -151,11 +151,11 @@ public class ImageDAO {
 			List<Image> list = new ArrayList<>();
 			rs = stmt.executeQuery();
 
-			while (rs.next()) {
+			if (rs.next()) {
 				Image image = imageMapper.resultMapping(rs);
 				list.add(image);
 			}
-			return list;
+			return list.get(0).getCode();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -182,7 +182,7 @@ public class ImageDAO {
 			stmt.setString(1, code);
 
 			int result = stmt.executeUpdate();
-			
+
 			int picNumber = LastID(conn);
 			return picNumber;
 
