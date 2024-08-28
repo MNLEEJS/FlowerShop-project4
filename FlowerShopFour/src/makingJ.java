@@ -38,4 +38,11 @@ public class makingJ {
 		pnl.add(btn);
 		return btn;
 	}
+	
+	public JPanel makePanel(int x, int y, int width, int height, JPanel pnl) {
+		JPanel includePnl = new JPanel();
+		includePnl.setBounds(x, y, width, height);
+		pnl.add(includePnl);
+		return includePnl;
+	}
 }
