@@ -1,7 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
@@ -26,6 +28,7 @@ public class FlowerProduct extends JDialog {
 	makingJ j = new makingJ();
 	FontL f = new FontL();
 	ImageIcon icon = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
+	List<JLabel> lblList = new ArrayList<>(); // 레이블 넣을 리스트
 
 	// name = 카테고리명 btn.getText();
 	public ImageIcon NewIcon(String name) {
@@ -53,15 +56,51 @@ public class FlowerProduct extends JDialog {
 
 		ImageIcon icon = NewIcon(name);
 
-		JScrollPane scrollPnl = new JScrollPane(); // 스크롤 바가 설치될 영역(패널)
+		JScrollPane scrollPnl = new JScrollPane(); // 스크롤 바가 설치될 영역
 		scrollPnl.setLayout(new ScrollPaneLayout());
 		pnl.add(scrollPnl);
-		scrollPnl.setBounds(0, 70, 985, 580);
+		scrollPnl.setBounds(0, 70, 985, 600);
 
-		JPanel pnlIncludeLbl = new JPanel(); // 체크박스와 이미지 레이블들 포함하는 패널
-		pnlIncludeLbl.setLayout(null);
-		pnlIncludeLbl.setBounds(0, 20, 985, 580);
-		scrollPnl.setViewportView(pnlIncludeLbl); // 실제로 스크롤되는 컨텐츠 포함 (스크롤하는 영역을 제한)
+		// 체크박스와 이미지 레이블들 포함하는 패널
+		// 실제로 스크롤 바가 움직일 공간을 위해 패널 생성
+		JPanel contentPanel = new JPanel();
+		contentPanel.setLayout(new GridLayout(0, 3, 30, 30));
+
+		for (int i = 0; i < 8; i++) {
+
+			JPanel pnlIncludeFlowerInfo = new JPanel();
+			pnlIncludeFlowerInfo.setLayout(new BorderLayout());
+			pnlIncludeFlowerInfo.setPreferredSize(new Dimension(300, 240));
+			pnlIncludeFlowerInfo.setBorder(new LineBorder(new Color(15, 57, 90))); // 패널 위치 확인용 테두리, 추후에 삭제 예정
+			contentPanel.add(pnlIncludeFlowerInfo);
+
+			JPanel pnlIncludeCheLbl = new JPanel();
+			pnlIncludeFlowerInfo.add(pnlIncludeCheLbl, BorderLayout.CENTER);
+			
+			JCheckBox che = new JCheckBox();
+			pnlIncludeCheLbl.add(che);
+
+			JLabel lblImage = new JLabel();
+			lblImage.setPreferredSize(new Dimension(200, 200));
+			lblImage.setBorder(new LineBorder(new Color(15, 210, 90))); // 레이블 위치 확인용 테두리, 이미지 삽입 후에 삭제 예정
+			pnlIncludeCheLbl.add(lblImage);
+			lblList.add(lblImage); // 리스트에 레이블 추가
+			
+			JLabel lblFlowerName = new JLabel("꽃다발 이름");
+			pnlIncludeFlowerInfo.add(lblFlowerName, BorderLayout.SOUTH);
+			
+		}
+
+		int numRows = (int) Math.ceil(13 / 3.0);
+		int itemHeight = 220;
+		int itemGap = 30;
+		int contentHeight = numRows * itemHeight + (numRows - 1) * itemGap;
+
+		contentPanel.setPreferredSize(new Dimension(985, contentHeight));
+		scrollPnl.setViewportView(contentPanel);
+
+		contentPanel.revalidate();
+		contentPanel.repaint();
 
 		// 마우스 휠 리스너를 이용한 스크롤 속도 조정
 		scrollPnl.addMouseWheelListener(new MouseWheelListener() {
@@ -79,25 +118,15 @@ public class FlowerProduct extends JDialog {
 			}
 		});
 
-		JLabel lbl = j.라벨만들기(name, f.font2, 10, 20, 300, 80, pnlIncludeLbl);
+//		JLabel lbl = j.라벨만들기(name, f.font2, 10, 20, 300, 80, pnlRepeat);
 
-		pnl.setLayout(null);
+//		pnl.setLayout(null);
+		pnl.setLayout(new BorderLayout());
 		pnl.setSize(new Dimension(1000, 600));
-		setLayout(null);
+//		setLayout(null);
+		setLayout(new BorderLayout());
 		add(pnl);
 		setSize(new Dimension(1000, 600));
-
-		int x = 30;
-		int y = 100;
-		int w = 40;
-		int h = 100;
-		체크박스반복(x, y, w, h, 6, pnlIncludeLbl);
-
-		x = 70;
-		y = 50;
-		w = 220;
-		h = 200;
-		라벨반복(icon, x, y, w, h, 6, pnlIncludeLbl);
 
 		// 장바구니 추가 버튼을 눌렀을 때
 		btnAddProduct.addActionListener(new ActionListener() {
@@ -115,49 +144,5 @@ public class FlowerProduct extends JDialog {
 				dispose(); // 다이얼로그 창 닫힘
 			}
 		});
-	}
-
-	public void 체크박스반복(int x, int y, int w, int h, int a, JPanel pnlIncludeLbl) {
-		int count = 0;
-
-		for (int i = 0; i < a; i++) {
-			count++;
-
-			if (i % 2 == 1) {
-				JCheckBox che = j.체크박스만들기(x, (y * 3), w, h, pnlIncludeLbl);
-
-			} else {
-				JCheckBox che = j.체크박스만들기(x, y, w, h, pnlIncludeLbl);
-			}
-
-			if (count == 2) {
-				count = 0;
-				x += 300;
-			}
-		}
-	}
-
-	public void 라벨반복(ImageIcon icon, int x, int y, int w, int h, int a, JPanel pnlIncludeLbl) {
-		int count = 0;
-
-		for (int i = 0; i < a; i++) {
-			count++;
-
-			if (i % 2 == 1) {
-				JLabel lbl = j.라벨만들기(null, null, x, (y * 5) + 20, w, h, pnlIncludeLbl);
-				lbl.setIcon(icon);
-//				lblList.add(lbl);
-
-			} else {
-				JLabel lbl = j.라벨만들기(null, null, x, y, w, h, pnlIncludeLbl);
-				lbl.setIcon(icon);
-//				lblList.add(lbl);
-			}
-
-			if (count == 2) {
-				count = 0;
-				x += 300;
-			}
-		}
 	}
 }
