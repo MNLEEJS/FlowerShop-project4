@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 // 이진석 메인화면 작성
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 //작성자 || 이진석
 public class Main extends JFrame {
@@ -24,6 +25,10 @@ public class Main extends JFrame {
 	MemberInfo Mif = new MemberInfo();
 	List<String> listID1 = Mif.IDseach();
 	List<String> listPW1 = Mif.PWseach();
+	FlowerDAO flowerdao = new FlowerDAO();
+	List<String> listCategory = flowerdao.selectCategory();
+	List<Flower> listFlower = flowerdao.selectAllWithList();
+	List<JButton> listbtton = new ArrayList<JButton>();
 	FontL f = new FontL();
 	public JPanel pnl3;
 	public JPanel pnl2;
@@ -37,30 +42,55 @@ public class Main extends JFrame {
 		Main1();
 		Maingo();
 		Maingo2();
-		
-		setSize(new Dimension(1200, 500));
+
+		setSize(new Dimension(600, 500));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 	private void Main1() {
+
 		pnl2 = new JPanel();
 		pnl2.setLayout(null);
-		pnl2.setBounds(600, 0, 600, 500);
+		pnl2.setBounds(460, 0, 400, 500);
 		getContentPane().add(pnl2);
+//		=======================================
+		String category = "기본값";
+		int y = 50;
+		for (int i = 0; i < listCategory.size(); i++) {
+			category = listCategory.get(i);
 
-		ImageIcon icon1 = new ImageIcon(Main.class.getResource("/image/예시1.jpg"));
-		JButton photo = j.버튼만들기(null, f.font1, 0, 0, 500, 450, pnl2);
-		photo.setIcon(icon1);
-		photo.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FP.setVisible(true);
+			if (category.equals(listCategory.get(i))) {
+
+			} 
+
+			
+			if(i == 0) {
+				JLabel CategoryLabel = j.라벨만들기("카테고리", f.font5, 30, y, 100, 50, pnl2);
+				y += 50;
 			}
-		});
-		pnl2.add(photo);
+			JButton btnCategory = j.버튼만들기(category, f.font4, 10, y, 100, 50, pnl2);
+			listbtton.add(btnCategory);
+			y += 70;
+			
+			if(i == 6) {
+				break;
+			}
+		}
+//		======================================
+		for (int a = 0; a < listbtton.size(); a++) {
+			listbtton.get(a).addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
+		}
+
 	}
 
-	private void Maingo()  {
+//		======================================
+
+	private void Maingo() {
 		pnl1 = new JPanel();
 		JLabel lbl12 = j.라벨만들기("돼지 꽃집 메인화면", f.font2, 0, 10, 600, 100, pnl1);
 		// 아이디
@@ -90,14 +120,12 @@ public class Main extends JFrame {
 					if (txtPW.getText().equals(listPW1.get(j))) {
 						countPW++;
 					}
-
 					if (txtID.getText().equals("이나겸")) {
 						countIDID++;
 					}
 					if (txtPW.getText().equals("12")) {
 						countPWPW++;
 					}
-
 				}
 				if (countIDID > 0 && countPWPW > 0) {
 					king++; // 관리자로 로그인하면 일반회원 로그인 못하게 조건 주는 매개체
@@ -142,6 +170,7 @@ public class Main extends JFrame {
 	public void Maingo2() {
 		pnl3 = new JPanel();
 		// 메인화면
+
 		JLabel lbl1 = j.라벨만들기("돼지 꽃집 메인화면", f.font2, 0, 10, 600, 100, pnl3);
 		JLabel lblWelcome = j.라벨만들기("회원님 반갑습니다.(회원번호)", f.font3, 30, 40, 600, 100, pnl3);
 		JButton btnJang = j.버튼만들기("장바구니", f.font3, 30, 150, 200, 130, pnl3);

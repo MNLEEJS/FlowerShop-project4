@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -18,7 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class AddColumn extends JDialog {
-	
 	List<Flower> listF = new ArrayList<Flower>();
 	JFileChooser jfc = new JFileChooser();
 	// makingJ, FontL 선언으로 메소드 사용 가능
@@ -28,6 +28,11 @@ public class AddColumn extends JDialog {
 	List<JTextField> listTxt = new ArrayList<JTextField>();
 	List<JButton> listJB = new ArrayList<JButton>();
 	String code = null;
+	FlowerDAO flowerDAO = new FlowerDAO();
+	List<String> listCategory = flowerDAO.selectCategory();
+	private JComboBox<String> eXcombo;
+	String select = null;
+	
 	// 하나의 패널과 메인 컬럼 추가
 	// 컬럼추가 화면의 각 라벨과 텍스트 필드 생성
 	public AddColumn() {
@@ -41,6 +46,35 @@ public class AddColumn extends JDialog {
 		int h = 100;
 
 		for (int i = 0; i < 5; i++) {
+			if(i==0) {
+				
+				List<JComboBox<String>> combo = new ArrayList<>();
+				String[] concon = new String[listCategory.size()+1];
+				
+				for (int j = 0; j < listCategory.size()+1; j++) {
+					if(j == 0) {
+						concon[j] = "카테고리종류";
+					}else {
+						concon[j] = listCategory.get(j-1);
+					}
+				}
+				
+				eXcombo = new JComboBox<>(concon);
+				pnl.add(eXcombo);
+				eXcombo.setBounds(2 * x, y, h + 50, w);
+				eXcombo.setFont(f.font4);
+				eXcombo.addActionListener(new ActionListener() {
+				
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						select = String.valueOf(eXcombo.getSelectedItem());
+						System.out.println(select);
+						
+					}
+				});
+			}
+			
 			String name = "카테고리";
 			if (i == 1) {
 				name = "컬럼명";
@@ -51,8 +85,8 @@ public class AddColumn extends JDialog {
 			} else if (i == 4) {
 				name = "이미지";
 			}
-			JLabel lbl = j.라벨만들기(name, f.font1, x, y, h, w, pnl);
-			if (i != 4) {
+			JLabel lbl = j.라벨만들기(name, f.font3, x, y, h, w, pnl);
+			if (i != 4 && i != 0) {
 				JTextField txt1 = j.텍스트필드만들기(15, f.font1, 2 * x, y, h + 50, w, pnl);
 				listTxt.add(txt1);
 			} else if (i == 4) {
@@ -88,12 +122,17 @@ public class AddColumn extends JDialog {
 		// 하단 확인, 취소 버튼 생성
 		JButton btn1 = j.버튼만들기("확인", f.font1, 300, 450, 100, 50, pnl);
 		btn1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 
-				String category = listTxt.get(0).getText();
-				String name = listTxt.get(1).getText();
-				int count = Integer.valueOf(listTxt.get(2).getText());
-				int price = Integer.valueOf(listTxt.get(3).getText());
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				String category = select;
+				if(!category.equals("카테고리종류")) {
+					System.out.println(listTxt.size());
+					System.out.println(listTxt.toString());
+				String name = listTxt.get(0).getText();
+				int count = Integer.valueOf(listTxt.get(1).getText());
+				int price = Integer.valueOf(listTxt.get(2).getText());
 
 				FlowerDAO da = new FlowerDAO();
 				int a = da.insert(category, name, count, price, code);
@@ -106,6 +145,9 @@ public class AddColumn extends JDialog {
 					setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(null, "대실패");
+				}
+				}else {
+					JOptionPane.showMessageDialog(null, "카테고리를 선택하여 주세요");
 				}
 			}
 		});

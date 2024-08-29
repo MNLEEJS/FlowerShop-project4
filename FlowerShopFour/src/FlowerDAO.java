@@ -85,7 +85,60 @@ public class FlowerDAO {
 //		}
 //		return null;
 //	}
+//select count(*) from (select * from flower group by category) as a;
+	// 만들어놓은 카테고리의 값을 찾는
+	public List<String> selectCategory() {
+		String sql = "select category from (select * from flower group by category) as a";
 
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			List<String> list = new ArrayList<String>();
+			
+			while (rs.next()) {
+				list.add(rs.getString("category"));
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public List<Flower> selectWhere(String colum, String columName) {
+		String sql = "select * from flower Where " + colum + " = ?";
+
+		List<Flower> list = new ArrayList<>();
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			
+
+			stmt.setString(1, columName);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				Flower flower = flowerMapper.resultMapping(rs);
+				list.add(flower);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
 	// 조회 (select) , List 이용
 	// flower 테이블의 전체 컬럼 조회
 	public List<Flower> selectAllWithList() {

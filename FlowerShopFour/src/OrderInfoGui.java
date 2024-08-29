@@ -1,6 +1,10 @@
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -10,97 +14,203 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneLayout;
+
+
+import javafx.scene.control.ComboBox;
 
 //작성자 : 이아현
 
 // 구매자를 위한 주문 구성의 선택과 취소창
+
 public class OrderInfoGui extends JFrame {
-	
-//	JScrollPane scrollPnl = new JScrollPane();
 
-	makingJ j = new makingJ();
-	FontL f = new FontL();
-	JCheckBox c = new JCheckBox();
-	JTextField txt = new JTextField();
+   ProductExplain PE = new ProductExplain();
+   makingJ j = new makingJ();
+   FontL f = new FontL();
+   JCheckBox c = new JCheckBox();
+   JTextField txt = new JTextField();
+   List<Flower> list = new ArrayList<Flower>();
+   FlowerDAO dao = new FlowerDAO();
+   ImageDAO Idao = new ImageDAO();
+   ImageFileInsert image = new ImageFileInsert();
+   // 주문정보를 담을 패널 구성
+   JPanel pnl = new JPanel();
 
-	// 주문정보를 담을 패널 구성
-			JPanel pnl = new JPanel();
-			
-	// 기본 주문 확인창 및 상단 버튼 생성
-			JLabel lbl1 = j.라벨만들기("주문확인창", f.font5, 10, 50, 110, 50, pnl);
-			JLabel lbl2 = j.라벨만들기("주문 내역", f.font5, 10, 100, 260, 50, pnl);
+   // 주문 확인창 라벨
+   JLabel lbl1 = j.라벨만들기("주문확인창", f.font5, 10, 50, 110, 50, pnl);
+   JLabel lbl2 = j.라벨만들기("주문 내역", f.font5, 10, 110, 260, 50, pnl);
+   // 주문 확인창 버튼
+   JButton btn1 = j.버튼만들기("메인화면", f.font5, 150, 50, 120, 60, pnl);
+   JButton btn2 = j.버튼만들기("전체선택", f.font5, 280, 50, 120, 60, pnl);
+   JButton btn3 = j.버튼만들기("전체취소", f.font5, 410, 50, 120, 60, pnl);
+   JButton btn4 = j.버튼만들기("결제", f.font5, 540, 50, 120, 60, pnl);
 
-			JButton btn1 = j.버튼만들기("변경완료", f.font5, 150, 50, 120, 60, pnl);
-			JButton btn2 = j.버튼만들기("선택취소", f.font5, 280, 50, 120, 60, pnl);
-			JButton btn3 = j.버튼만들기("전체취소", f.font5, 410, 50, 120, 60, pnl);
-			JButton btn4 = j.버튼만들기("결제", f.font5, 540, 50, 120, 60, pnl);
-			
-			
-	
-	public OrderInfoGui() {
+   public OrderInfoGui() {
 
-		add(pnl);
-		pnl.setLayout(null);
-		pnl.setSize(new Dimension(700, 800));
-		setLayout(null);
-		setSize(new Dimension(700, 900));
-		
-//		// 패널에 스크롤 추가
-//		pnl.add(scrollPnl);
-//		scrollPnl.setBounds(10, 70, 700, 900);
-//		scrollPnl.setViewportView(pnl);
-		
-		
-		// 콤보 박스에 담을 수량 생성을 위한 배열
-		String[] count = { "수량", "1개", "2개", "3개", "4개" };
-		JComboBox<String> counting = new JComboBox<>(count);
-		int y = 180;
-		
-		// 수량 선택을 위한 콤보 박스 생성
-		// "수량" 선택시 정확한 수량 입력하라는 메세지 뜨면서 수량 1개로 자동 이동 
-		counting.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String selectedcounting = (String) counting.getSelectedItem();
+      int y = 180;
 
-				if ("수량".equals(selectedcounting)) {
-				JOptionPane.showMessageDialog(pnl, "수량을 정확히 입력해 주세요");
-				counting.setSelectedIndex(1);
-					
-				} else {
-				JOptionPane.showMessageDialog(pnl, "선택 수량" + selectedcounting);
-				}
-				}
-			
-		});
-		for (int i = 0; i < 4; i++) {
-			if (i == 1) {
-			} else if (i == 2) {
-			} else if (i == 3) {
-			}
-			// 상품의 주문을 위한 선택&취소 버튼, 이미지 버튼 생성
-		j.체크박스만들기(10, y+20, 50, 50, pnl);
-		ImageIcon icon1 = new ImageIcon(Main.class.getResource("/image/꽃 이미지.jpg"));
-		JButton image = j.버튼만들기("이미지", f.font5, 60, y, 100, 100, pnl);
-		image.setIcon(icon1);
-		JLabel lblproduct = j.라벨만들기("상품명", f.font5, 170, y, 150, 50, pnl);
-		JLabel lblPrice = j.라벨만들기("금액", f.font5, 400, y, 150, 50, pnl);
-		JComboBox<String> counting1 = new JComboBox<>(count);
-		pnl.add(counting1);
-		counting1.setBounds(170, y+50, 100, 50);
-		y += 120;
-	
-	
-		}
-		
-	}
+      list.addAll((dao.selectAllWithList()));
 
-	public static void main(String[] args) {
-		
-		new OrderInfoGui().setVisible(true);
-		
-	}
+      // JPanel의 레이아웃, 크기 설정
+      pnl.setLayout(null);
+      pnl.setPreferredSize(new Dimension(700, 1000)); // 패널 크기 설정을 setPreferredSize로 변경
+      setLayout(null);
+      setSize(new Dimension(1000, 900));
+
+      // 콤보 박스에 담을 수량 생성을 위한 배열
+      String[] count = { "1개", "2개", "3개", "4개" };
+
+      List<JCheckBox> checkboxList = new ArrayList<>();
+
+      List<JComboBox<String>> countingList = new ArrayList<>();
+      for (int i = 0; i < 4; i++) {
+         JComboBox<String> counting = new JComboBox<>(count);
+         countingList.add(counting);
+      }
+      
+      // 위에 생성한 동일한 레이블과 버튼을 생성하는 for문
+      for (int i = 0; i < 4; i++) {
+
+         final int index = i;
+         
+         
+
+         // 체크박스와 이미지 레이블들 포함하는 패널
+         // 상품의 주문을 위한 선택&취소 버튼, 이미지 버튼 생성
+         checkboxList.add(j.체크박스만들기(10, y + 20, 50, 50, pnl));
+         ImageIcon icon1 = new ImageIcon(Main.class.getResource("/image/꽃 이미지.jpg"));
+         JButton image = j.버튼만들기("이미지", f.font5, 60, y, 100, 100, pnl);
+         image.setIcon(icon1);
+
+         // 상품 상세정보가 나오는 이미지 버튼
+         image.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               PE.setVisible(true);
+            }
+         });
+
+         // 상품의 상세정보를 담고있는 db정보
+         String product = list.get(i).getName();
+         int price = list.get(0).getPrice();
+         JLabel lblproduct = j.라벨만들기("상품명 : " + product, f.font5, 170, y, 200, 50, pnl);
+         String abc = (String) countingList.get(index).getSelectedItem();
+         
+         // 추후 입력 받을 수량을
+         // countingList.get(index).setSelectedIndex(3);
+
+         // 0번째부터 1번전까지 substring 이니까 index 0부터 시작
+         int bbc = Integer.parseInt(abc.substring(0, 1));
+         JLabel lblPrice = j.라벨만들기("금액 합계 : " + price * bbc, f.font5, 400, y, 200, 50, pnl);
+
+         // 이미지 찾아오기
+         String code = Idao.findByNo(list.get(0).getImage_no());
+//         ImageIcon icon = image.ima
+         
+         // 수량 선택을 위한 콤보 박스 생성
+         countingList.get(index).addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               String selectedcounting = (String) countingList.get(index).getSelectedItem();
+               
+               // 수량 선택 시 해당 수량 반영해서 금액 산정 출력
+               JOptionPane.showMessageDialog(pnl, "선택 수량" + selectedcounting);
+               
+               // 수량을 담은 리스트 인트로 변환 후 개수로 활용 변수 : bbc
+               // 선택한 수량만큼 금액 계산
+               int price = list.get(index).getPrice();
+               String abc = (String) countingList.get(index).getSelectedItem();
+               int bbc = Integer.parseInt(abc.substring(0, 1));
+               System.out.println(price);
+               System.out.println(abc);
+               System.out.println(bbc);
+               lblPrice.setText("금액 합계 : " + price * bbc);
+
+            }
+         });
+         // 패널에 콤보 박스 사이즈 지정 및 추가
+         pnl.add(countingList.get(i));
+         countingList.get(i).setBounds(170, y + 50, 100, 50);
+         y += 120;
+
+      }
+
+      
+      
+      // 스크롤 패널 추가
+      JScrollPane scrollPnl = new JScrollPane(pnl);
+      add(scrollPnl);
+      scrollPnl.setLayout(new ScrollPaneLayout());
+      scrollPnl.setBounds(0, 70, 800, 700);
+      scrollPnl.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+      scrollPnl.setViewportView(pnl);
+
+      scrollPnl.addMouseWheelListener(new MouseWheelListener() {
+         @Override
+         public void mouseWheelMoved(MouseWheelEvent e) {
+            int scrollAmount = e.getScrollAmount();
+            int scrollSpeed = 9; // 스크롤 속도 배수 조정 (9배)
+
+            if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+               JScrollBar verticalBar = scrollPnl.getVerticalScrollBar(); // 세로 방향 스크롤 바
+               int scroll = e.getUnitsToScroll() * verticalBar.getUnitIncrement() * scrollSpeed;
+
+               verticalBar.setValue(verticalBar.getValue() + scroll);
+            }
+         }
+      });
+
+      
+      
+      
+      // 카테고리 메인으로 이동 버튼
+      btn1.addActionListener(new ActionListener() {
+
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            Main m = new Main();
+            m.setVisible(true);
+            m.Maingo2();
+            dispose();
+         }
+      });
+
+      // 전체 선택 버튼
+      btn2.addActionListener(new ActionListener() {
+
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i < 4; i++) {
+
+               checkboxList.get(i).setSelected(true);
+            }
+
+         }
+      });
+
+      // 전체 취소 버튼
+      btn3.addActionListener(new ActionListener() {
+
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i < 4; i++) {
+
+               checkboxList.get(i).setSelected(false);
+            }
+
+         }
+      });
+
+   }
+
+   public static void main(String[] args) {
+
+      new OrderInfoGui().setVisible(true);
+
+   }
 }
