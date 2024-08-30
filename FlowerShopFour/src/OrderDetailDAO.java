@@ -91,7 +91,7 @@ public class OrderDetailDAO {
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
 	public int insert(int flowerNo, int count) {
-		String sql = "insert into order_detail (flowerNo, count) values (?, ?)";
+		String sql = "insert into order_detail (flower_No, count) values (?, ?)";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;

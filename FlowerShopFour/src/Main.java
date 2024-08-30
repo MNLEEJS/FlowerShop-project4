@@ -81,6 +81,7 @@ public class Main extends JFrame {
 		// 카테고리버튼 액션주기
 		// 나겸이 완성하면 스트링으로 넘겨주기
 		for (int a = 0; a < listbtton.size(); a++) {
+//			listbtton.get(a).getText(); // 각 버튼의 텍스트 확인용
 			listbtton.get(a).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -88,7 +89,6 @@ public class Main extends JFrame {
 				}
 			});
 		}
-
 	}
 
 //		======================================
