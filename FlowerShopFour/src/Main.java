@@ -17,6 +17,9 @@ import javax.swing.Timer;
 
 //작성자 || 이진석
 public class Main extends JFrame {
+	// 로그인한 유저의 아이디 비밀번호
+	LoginUserInfo user = new LoginUserInfo();
+	
 	makingJ j = new makingJ();
 	memberJion mj = new memberJion();
 	memberModify mM = new memberModify();
@@ -62,8 +65,6 @@ public class Main extends JFrame {
 			if (category.equals(listCategory.get(i))) {
 
 			} 
-
-			
 			if(i == 0) {
 				JLabel CategoryLabel = j.라벨만들기("카테고리", f.font5, 30, y, 100, 50, pnl2);
 				y += 50;
@@ -77,6 +78,8 @@ public class Main extends JFrame {
 			}
 		}
 //		======================================
+		// 카테고리버튼 액션주기
+		// 나겸이 완성하면 스트링으로 넘겨주기
 		for (int a = 0; a < listbtton.size(); a++) {
 			listbtton.get(a).addActionListener(new ActionListener() {
 				@Override
@@ -100,12 +103,17 @@ public class Main extends JFrame {
 		JLabel lblPW = j.라벨만들기("비밀번호", f.font1, 80, 200, 150, 30, pnl1);
 		txtPW = j.텍스트필드만들기(15, null, 200, 200, 100, 30, pnl1);
 		// 로그인 버튼
-		System.out.println(listID1.size());
-		System.out.println(listPW1.size());
 		JButton btnLogin = j.버튼만들기("로그인", f.font1, 0, 300, 200, 100, pnl1);
 		btnLogin.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				
+				user.setID(txtID.getText());
+				user.setPW(txtPW.getText());
+				
+				
+				
 				// 일반회원 조회
 				int countID = 0;
 				int countPW = 0;
@@ -139,9 +147,11 @@ public class Main extends JFrame {
 				}
 				if (king == 0) { // 관리자 로그인 실패시 일반회원 정보 조회
 					if (countID > 0 && countPW > 0) {
+						
+						
+						pnl1.setVisible(false);
 						txtID.setText("");
 						txtPW.setText("");
-						pnl1.setVisible(false);
 						pnl3.setVisible(true);
 					} else if (countID > 0 && countPW == 0) {
 						JOptionPane.showMessageDialog(null, "비밀번호를 확인하세요");
@@ -178,6 +188,7 @@ public class Main extends JFrame {
 		btnModify.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				mM.user = user;
 				mM.setVisible(true);
 			}
 		});
@@ -186,6 +197,8 @@ public class Main extends JFrame {
 		btnOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				user.setID(null);
+				user.setPW(null);
 				txtID.setText("");
 				txtPW.setText("");
 				pnl1.setVisible(true);
