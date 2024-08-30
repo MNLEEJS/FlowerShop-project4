@@ -114,4 +114,28 @@ public class OrderDetailDAO {
 		}
 		return -1;
 	}
+	
+	// 고객이 주문한 정보 테이블(orderDetail)의 수량 update 메소드
+	public int update(int count, int no) {
+		String sql = "update flower set count = ? where no = ?";
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, count);
+		
+			return 1;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return -1;
+	}
 }
