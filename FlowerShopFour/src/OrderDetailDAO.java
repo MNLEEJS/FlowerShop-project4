@@ -3,6 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.management.RuntimeErrorException;
 
@@ -30,7 +32,7 @@ class OrderDetailMapper implements IResultMapper<OrderDetail> {
 	public OrderDetail resultMapping(ResultSet rs) {
 		try {
 			int no = rs.getInt("no");
-			int flowerNo = rs.getInt("flowerNo");
+			int flowerNo = rs.getInt("flower_No");
 			int count = rs.getInt("count");
 
 			return OrderDetail.builder().no(no).flowerNo(flowerNo).count(count).build();
@@ -63,8 +65,10 @@ public class OrderDetailDAO {
 
 	// 조회 (select)
 	// order_detail 테이블의 전체 컬럼 조회
-	public OrderDetail selectAll() {
+	public List<OrderDetail> selectAll() {
 		String sql = "select * from order_detail";
+
+		List<OrderDetail> list = new ArrayList<>();
 
 		Connection conn = null;
 		Statement stmt = null;
@@ -77,8 +81,9 @@ public class OrderDetailDAO {
 
 			while (rs.next()) {
 				OrderDetail orderDetail = orderDetailMapper.resultMapping(rs);
+				list.add(orderDetail);
 			}
-			return orderDetail;
+			return list;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,7 +96,7 @@ public class OrderDetailDAO {
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
 	public int insert(int flowerNo, int count) {
-		String sql = "insert into order_detail (flowerNo, count) values (?, ?)";
+		String sql = "insert into order_detail (flower_No, count) values (?, ?)";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -114,27 +119,29 @@ public class OrderDetailDAO {
 		}
 		return -1;
 	}
-	
+
 	// 고객이 주문한 정보 테이블(orderDetail)의 수량 update 메소드
 	public int update(int count, int no) {
-		String sql = "update flower set count = ? where no = ?";
+		String sql = "update order_Detail set count = " + count + " where no = ?";
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
+		
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, count);
-		
-			return 1;
-
+			stmt.setInt(1, no);
+			
+			int result = stmt.executeUpdate();
+			
+			if (result == 1) {
+				return result;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 
 		} finally {
-			DBUtil.closeAll(rs, stmt, conn);
+			DBUtil.closeAll(null, stmt, conn);
 		}
 		return -1;
 	}
