@@ -19,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneLayout;
 
-
 import javafx.scene.control.ComboBox;
 
 //작성자 : 이아현
@@ -28,88 +27,105 @@ import javafx.scene.control.ComboBox;
 
 public class OrderInfoGui extends JFrame {
 
-   ProductExplain PE = new ProductExplain();
-   makingJ j = new makingJ();
-   FontL f = new FontL();
-   JCheckBox c = new JCheckBox();
-   JTextField txt = new JTextField();
-   List<Flower> list = new ArrayList<Flower>();
-   FlowerDAO dao = new FlowerDAO();
-   ImageDAO Idao = new ImageDAO();
-   ImageFileInsert image = new ImageFileInsert();
-   // 주문정보를 담을 패널 구성
-   JPanel pnl = new JPanel();
+	OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+	makingJ j = new makingJ();
+	FontL f = new FontL();
+	JCheckBox c = new JCheckBox();
+	JTextField txt = new JTextField();
+	List<Flower> list = new ArrayList<Flower>();
+	List<OrderDetailDAO> orderDetail = new ArrayList<OrderDetailDAO>();
+	FlowerDAO dao = new FlowerDAO();
+	ImageDAO Idao = new ImageDAO();
+	ImageFileInsert IFI = new ImageFileInsert();
 
-   // 주문 확인창 라벨
-   JLabel lbl1 = j.라벨만들기("주문확인창", f.font5, 10, 50, 110, 50, pnl);
-   JLabel lbl2 = j.라벨만들기("주문 내역", f.font5, 10, 110, 260, 50, pnl);
-   // 주문 확인창 버튼
-   JButton btn1 = j.버튼만들기("메인화면", f.font5, 150, 50, 120, 60, pnl);
-   JButton btn2 = j.버튼만들기("전체선택", f.font5, 280, 50, 120, 60, pnl);
-   JButton btn3 = j.버튼만들기("전체취소", f.font5, 410, 50, 120, 60, pnl);
-   JButton btn4 = j.버튼만들기("결제", f.font5, 540, 50, 120, 60, pnl);
+//	public void orderDetails() {
+//		orderDetail.addAll(orderDetail.set(no, count));
+//	}
 
-   public OrderInfoGui() {
+	// 주문정보를 담을 패널 구성
+	JPanel pnl = new JPanel();
+
+	// 주문 확인창 라벨
+	JLabel lbl1 = j.라벨만들기("주문확인창", f.font5, 10, 50, 110, 50, pnl);
+	JLabel lbl2 = j.라벨만들기("주문 내역", f.font5, 10, 110, 260, 50, pnl);
+	// 주문 확인창 버튼
+	JButton btn1 = j.버튼만들기("메인화면", f.font5, 180, 50, 120, 60, pnl);
+	JButton btn2 = j.버튼만들기("전체선택", f.font5, 320, 50, 120, 60, pnl);
+	JButton btn3 = j.버튼만들기("전체취소", f.font5, 460, 50, 120, 60, pnl);
+	JButton btn4 = j.버튼만들기("결제", f.font5, 600, 50, 120, 60, pnl);
+	JButton btn5 = j.버튼만들기("변경", f.font5, 620, 150, 150, 100, pnl);
+
+	public OrderInfoGui() {
 
       int y = 180;
 
       list.addAll((dao.selectAllWithList()));
-
+      
       // JPanel의 레이아웃, 크기 설정
       pnl.setLayout(null);
-      pnl.setPreferredSize(new Dimension(700, 1000)); // 패널 크기 설정을 setPreferredSize로 변경
+      pnl.setPreferredSize(new Dimension(700, 900)); // 패널 크기 설정을 setPreferredSize로 변경
       setLayout(null);
-      setSize(new Dimension(1000, 900));
+      setSize(new Dimension(900, 860));
 
       // 콤보 박스에 담을 수량 생성을 위한 배열
-      String[] count = { "1개", "2개", "3개", "4개" };
-
+      System.out.println(list.get(0).getCount()-1);
+      String[] count = { "1개", "2개", "3개", "4개", "5개", "6개", "7개", "8개"};
+      
+      
+      // 개수 값 list.count로 받아올 수 있음
+      // 최대 개수를 미리 정하고 크기만큼 string count에 넣어줘야함
+      
       List<JCheckBox> checkboxList = new ArrayList<>();
-
+      
       List<JComboBox<String>> countingList = new ArrayList<>();
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < list.size(); i++) {
          JComboBox<String> counting = new JComboBox<>(count);
          countingList.add(counting);
       }
       
       // 위에 생성한 동일한 레이블과 버튼을 생성하는 for문
-      for (int i = 0; i < 4; i++) {
-
+      for (int i = 0; i < list.size(); i++) {
+    	  
          final int index = i;
+     
+         // 이미지 찾아오기
+         String code = Idao.findByNo(list.get(i).getImage_no());
+         ImageIcon icon = IFI.ImageiconCreate(code);
          
          
-
          // 체크박스와 이미지 레이블들 포함하는 패널
          // 상품의 주문을 위한 선택&취소 버튼, 이미지 버튼 생성
          checkboxList.add(j.체크박스만들기(10, y + 20, 50, 50, pnl));
-         ImageIcon icon1 = new ImageIcon(Main.class.getResource("/image/꽃 이미지.jpg"));
-         JButton image = j.버튼만들기("이미지", f.font5, 60, y, 100, 100, pnl);
-         image.setIcon(icon1);
-
+         
+         JButton imagebtn = j.버튼만들기("이미지", f.font5, 60, y, 100, 100, pnl);
+         imagebtn.setIcon(icon);
+         
          // 상품 상세정보가 나오는 이미지 버튼
-         image.addActionListener(new ActionListener() {
+         imagebtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	ProductExplain PE = new ProductExplain(index);
+
                PE.setVisible(true);
             }
          });
-
+         
          // 상품의 상세정보를 담고있는 db정보
          String product = list.get(i).getName();
-         int price = list.get(0).getPrice();
+         int price = list.get(i).getPrice();
          JLabel lblproduct = j.라벨만들기("상품명 : " + product, f.font5, 170, y, 200, 50, pnl);
-         String abc = (String) countingList.get(index).getSelectedItem();
          
-         // 추후 입력 받을 수량을
-         // countingList.get(index).setSelectedIndex(3);
-
+         // 상품의 상세정보에 대한 콤보 박스에 들어갈 개수 리스트 
+         String detailProduct = (String) countingList.get(index).getSelectedItem();
+         // 추후 입력 받을 수량을 인덱스 안에 넣어줘야함
+          countingList.get(index).setSelectedIndex(list.get(i).getCount()-1);
+          
+          
          // 0번째부터 1번전까지 substring 이니까 index 0부터 시작
-         int bbc = Integer.parseInt(abc.substring(0, 1));
+         int bbc = Integer.parseInt(detailProduct.substring(0, 1));
          JLabel lblPrice = j.라벨만들기("금액 합계 : " + price * bbc, f.font5, 400, y, 200, 50, pnl);
-
-         // 이미지 찾아오기
-         String code = Idao.findByNo(list.get(0).getImage_no());
-//         ImageIcon icon = image.ima
+         
+         
          
          // 수량 선택을 위한 콤보 박스 생성
          countingList.get(index).addActionListener(new ActionListener() {
@@ -164,8 +180,13 @@ public class OrderInfoGui extends JFrame {
             }
          }
       });
-
       
+//      public OrderListUpdate(int no) {
+//   	   // 수량 업데이트
+//       orderDetails();
+//   	   int count = orderDetailDAO.update(list.get(bbc), no);
+//   }
+
       
       
       // 카테고리 메인으로 이동 버튼
@@ -208,9 +229,9 @@ public class OrderInfoGui extends JFrame {
 
    }
 
-   public static void main(String[] args) {
+	public static void main(String[] args) {
 
-      new OrderInfoGui().setVisible(true);
+		new OrderInfoGui().setVisible(true);
 
-   }
+	}
 }

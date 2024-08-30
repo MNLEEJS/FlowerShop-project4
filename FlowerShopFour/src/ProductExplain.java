@@ -48,25 +48,26 @@ public class ProductExplain extends JDialog{
 //	list.addAll(dao.findBy(columnName, null, null, image_no));
    
    
-   public ProductExplain() {
+   
+   public ProductExplain(int imageNum) {
       setModal(true);
       flowerGet();
       // 이미지 조회
-      String code = Idao.findByNo(list.get(2).getImage_no());
+      String code = Idao.findByNo(list.get(imageNum).getImage_no());
       ImageIcon icon = image.ImageiconCreate(code);
       
       JPanel pnl = new JPanel();
       JLabel lblcategory = j.라벨만들기("카테고리명 : ", f.font4, 20, 10, 130, 30, pnl);
       
-      String cateGory = list.get(0).getCategory();
+      String cateGory = list.get(imageNum).getCategory();
       JLabel lblcategoryname = j.라벨만들기(cateGory, f.font4, 150, 10, 250, 30, pnl);
       
       JLabel lblprice = j.라벨만들기("가격 : ", f.font4, 20, 50, 800, 30, pnl);
-      int price = list.get(0).getPrice();
+      int price = list.get(imageNum).getPrice();
       String priceString = String.valueOf(price);
       JLabel lblpricere = j.라벨만들기((priceString + " 원"), f.font4, 90, 50, 150, 30, pnl);
       
-      String product = list.get(0).getName();
+      String product = list.get(imageNum).getName();
       JLabel lblname = j.라벨만들기(product, f.font3, 200, 40, 250, 50, pnl);
       
       
@@ -84,7 +85,7 @@ public class ProductExplain extends JDialog{
       setSize(new Dimension(500,500));
    }
    public static void main(String[] args) {
-      new ProductExplain().setVisible(true);
+      new ProductExplain(1).setVisible(true);
    }
    
 }
