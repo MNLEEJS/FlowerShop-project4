@@ -59,8 +59,7 @@ public class FlowerDAO {
 	FlowerMapper flowerMapper = new FlowerMapper();
 	Flower flower;
 	ImageDAO dao = new ImageDAO();
-	
-	
+
 	// 조회 (select)
 	// flower 테이블의 전체 컬럼 조회
 //	public Flower selectAll() {
@@ -85,6 +84,7 @@ public class FlowerDAO {
 //		}
 //		return null;
 //	}
+
 //select count(*) from (select * from flower group by category) as a;
 	// 만들어놓은 카테고리의 값을 찾는
 	public List<String> selectCategory() {
@@ -93,37 +93,38 @@ public class FlowerDAO {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			List<String> list = new ArrayList<String>();
-			
+
 			while (rs.next()) {
 				list.add(rs.getString("category"));
 			}
 			return list;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	public List<Flower> selectWhere(String colum, String columName) {
-		String sql = "select * from flower Where " + colum + " = ?";
+
+	public List<Flower> selectWhere(String column, String columnName) {
+		String sql = "select * from flower Where " + column + " = ?";
 
 		List<Flower> list = new ArrayList<>();
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
-			
 
-			stmt.setString(1, columName);
+			stmt.setString(1, columnName);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				Flower flower = flowerMapper.resultMapping(rs);
@@ -136,9 +137,7 @@ public class FlowerDAO {
 		}
 		return null;
 	}
-	
-	
-	
+
 	// 조회 (select) , List 이용
 	// flower 테이블의 전체 컬럼 조회
 	public List<Flower> selectAllWithList() {
@@ -149,7 +148,7 @@ public class FlowerDAO {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.createStatement();
@@ -219,7 +218,7 @@ public class FlowerDAO {
 		int image_no = dao.insert(code);
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
@@ -262,6 +261,34 @@ public class FlowerDAO {
 			stmt.setInt(4, price);
 			stmt.setInt(5, image_no);
 			stmt.setInt(6, no);
+
+			return 1;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return -1;
+	}
+
+	// count값 수정 (update)
+	// flower 테이블의 count 컬럼의 값을 update해주는 메소드
+	// update가 정상적으로 되면 return 1
+	// update가 정상적으로 되지않으면 return -1
+	public int updateCount(int no, int count) {
+		String sql = "update flower set count = ? where no = ?";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, count);
+			stmt.setInt(2, no);
 
 			return 1;
 
