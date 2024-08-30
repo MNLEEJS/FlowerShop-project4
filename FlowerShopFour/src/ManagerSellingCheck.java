@@ -21,7 +21,9 @@ import javax.swing.JPanel;
 public class ManagerSellingCheck extends JDialog {
 	makingJ j = new makingJ();
 	FontL font = new FontL();
-
+	// 유저전체의 번호를 조회 > 그 번호로 주문번호 전체 조회 > 주문번호로 총 가격 조회해서 매출 출력
+	
+	
 	public ManagerSellingCheck() {
 		setModal(true);
 		setSize(new Dimension(900, 500));

@@ -19,7 +19,7 @@ public class MemberInfo {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		List<String> list = new ArrayList<String>();
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
@@ -35,17 +35,15 @@ public class MemberInfo {
 		}
 		return null;
 	}
-	
-	
-	
+
 	public List<String> IDseach() {
 		String sql = "SELECT ID FROM membership";
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+
 		List<String> list = new ArrayList<String>();
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
@@ -120,52 +118,81 @@ public class MemberInfo {
 		}
 		return -1;
 	}
+
 	public int update(String phoneNumber, String id, String pw, String address) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
+		int count = 0;
 		String sql = "Update membership set phoneNumber = ?, pw = ?, address = ? where ID = ?";
 		// 비밀번호만 변경
 		if (pw != null && phoneNumber == null && address == null) {
 			sql = "Update membership set pw = ?where ID = ? ";
+			count += 10;
 			// 휴대폰번호만 변경
 		} else if (pw == null && phoneNumber != null && address == null) {
 			sql = "Update membership set phoneNumber = ?where ID = ? ";
+			count += 30;
 			// 주소만 변경
 		} else if (pw == null && phoneNumber == null && address != null) {
 			sql = "Update membership set address = ?where ID = ? ";
+			count += 60;
 			// 비밀번호랑 휴대폰번호 변경
 		} else if (pw != null && phoneNumber != null && address == null) {
 			sql = "Update membership set pw = ?, phoneNumber = ?where ID = ? ";
+			count += 90;
 			// 비밀번호랑 주소 변경
 		} else if (pw != null && phoneNumber == null && address != null) {
 			sql = "Update membership set pw = ?, address = ?where ID = ? ";
+			count += 100;
 			// 주소랑 폰번호 변경
 		} else if (pw == null && phoneNumber != null && address != null) {
 			sql = "Update membership set phoneNumber = ?, address = ?where ID = ? ";
-		} else {
-			sql = "Update membership set phoneNumber = ?, pw = ?, address = ? where ID = ?";
+			count += 150;
 		}
 
 		try {
 			conn = DBUtil.getConnection("project3");
-
 			stmt = conn.prepareStatement(sql);
 
-			stmt.setString(1, phoneNumber);
-			stmt.setString(2, pw);
-			stmt.setString(3, address);
-			stmt.setString(4, id);
+			if (count == 10) {
+				stmt.setString(1, pw);
+				stmt.setString(2, id);
+			} else if (count == 30) {
+				stmt.setString(1, phoneNumber);
+				stmt.setString(2, id);
+			} else if (count == 60) {
+				stmt.setString(1, address);
+				stmt.setString(2, id);
+			} else if (count == 90) {
+				stmt.setString(1, pw);
+				stmt.setString(2, phoneNumber);
+				stmt.setString(3, id);
+			} else if (count == 100) {
+				stmt.setString(1, pw);
+				stmt.setString(2, address);
+				stmt.setString(3, id);
+			} else if (count == 150) {
+				stmt.setString(1, phoneNumber);
+				stmt.setString(2, address);
+				stmt.setString(3, id);
+			} else {
+				stmt.setString(1, phoneNumber);
+				stmt.setString(2, pw);
+				stmt.setString(3, address);
+				stmt.setString(4, id);
+			}
+
+			
 
 			int result = stmt.executeUpdate();
 			if (result == 1) {
 				return result;
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.closeAll(rs, stmt, null);
+			DBUtil.closeAll(null, stmt, conn);
 		}
 		return -1;
 	}

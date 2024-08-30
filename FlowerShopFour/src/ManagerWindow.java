@@ -44,7 +44,7 @@ public class ManagerWindow extends JDialog{
 
 		// JLable 생성 메소드 호출
 		JLabel lblTitle = j.라벨만들기("관리자 페이지", font.font3, 140, 15, 250, 40, pnlBase);
-
+		
 		JLabel lblTotalSales = j.라벨만들기("총 매출 : " + " 원", font.font4, 17, 364, 215, 25, pnlIncludeLabel);
 
 		JLabel lblTotalOrderCount = j.라벨만들기("총 주문 건수 : " + " 건", font.font4, 17, 404, 215, 25, pnlIncludeLabel);

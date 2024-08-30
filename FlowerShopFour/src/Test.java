@@ -36,7 +36,6 @@ public class Test extends JFrame {
 		int a = flowerList.size() / 6; // 패널의 갯수
 		int b = flowerList.size() % 6; // 추가패널 생성할지 말지
 		JPanel pnl = new JPanel(); // 카테고리 장바구니추가 메인으로가기 담는 패널
-
 		JLabel lbl = j.라벨만들기("카테고리", f.font3, 20, 20, 150, 50, pnl);
 		JButton btn = j.버튼만들기("장바구니 추가", f.font4, 400, 20, 180, 50, pnl);
 		JButton btn2 = j.버튼만들기("메인으로 가기", f.font4, 600, 20, 180, 50, pnl);
@@ -91,31 +90,18 @@ public class Test extends JFrame {
 				}
 //		이전,다음 버튼 만들기
 				flowerList.remove(0);
-
 			}
 			// 패널의 크기 만큼 만들기
 			JButton btnReturn = j.버튼만들기("이전", f.font4, 40, 500, 80, 50, pnl1);
 			listreturn.add(btnReturn);
-//			btnReturn.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					listPnl.get(o).setVisible(false);
-//					listPnl.get(o - 1).setVisible(true);
-//				}
-//			});
 
 			JButton btnNext = j.버튼만들기("다음", f.font4, 120, 500, 80, 50, pnl1);
 			listNext.add(btnNext);
-//			btnNext.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					listPnl.get(o).setVisible(false);
-//					listPnl.get(o - 1).setVisible(true);
-//				}
-//			});
+
 
 			add(pnl1);
 			pnl1.setBounds(0, 100, 800, 650);
 			pnl1.setLayout(null);
-
 //		 리스트값만큼 돌리고 나머지만 돌리기 위한 조건
 			if (count == a) {
 				// 플라워 사이즈의 몫만큼 돌렸다면?
@@ -134,16 +120,8 @@ public class Test extends JFrame {
 //		첫번쨰 패널의 이전버튼 삭제
 //		마지막 패널의 다음버튼 삭제
 		
-		for (int j = listPnl.size() - 1; j > 0; j--) {
-			listPnl.get(j).setVisible(false);
-			if (listPnl.size() > 2) {
-				listreturn.get(0);
-				listNext.remove(listNext.size() - 1).setVisible(false);
-			}
-		}
-		
-		
-		
+		listPnl.get(0).setVisible(false);
+		listPnl.get(1).setVisible(false);
 
 //		/////
 		pnl.setLayout(null);
