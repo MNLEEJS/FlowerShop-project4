@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,11 +29,13 @@ public class CategoryPage extends JFrame {
 	OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
 
 	// 이미지 버튼 리스트
-	List<JButton> listbtn = new ArrayList<JButton>();
+	List<JButton> listBtn = new ArrayList<JButton>();
 	// 체크박스 리스트
-	List<JCheckBox> listche = new ArrayList<JCheckBox>();
-	// 라벨 리스트
+	List<JCheckBox> listChe = new ArrayList<JCheckBox>();
+	// 레이블 리스트
 	List<JLabel> listLbl = new ArrayList<JLabel>();
+	// 콤보박스 리스트
+	List<JComboBox<Integer>> listComboBox = new ArrayList<JComboBox<Integer>>();
 	// 패널 리스트
 	List<JPanel> listPnl = new ArrayList<JPanel>();
 	// 클래스 리스트
@@ -60,12 +64,12 @@ public class CategoryPage extends JFrame {
 		JPanel pnl = new JPanel(); // 카테고리 장바구니추가 메인으로가기 담는 패널
 
 		JLabel lblCategory = j.라벨만들기("카테고리", f.font3, 20, 20, 150, 50, pnl);
-		
+
 		JButton btnInCart = j.버튼만들기("장바구니 추가", f.font4, 400, 20, 180, 50, pnl);
 		JButton btnGoMain = j.버튼만들기("메인으로 가기", f.font4, 600, 20, 180, 50, pnl);
 
 		int productCount = 7;
-
+		// 패널의크기만큼 도는 for문
 		for (int k = 1; k < pnlCount + 1; k++) {
 			count++;
 
@@ -81,20 +85,36 @@ public class CategoryPage extends JFrame {
 			int x1 = 50;
 			int y1 = 0;
 
-			// 컬럼명(상품명) 좌표 초기값
-			int x2 = 50;
+			// 컬럼명(상품명) 레이블 좌표 초기값
+			int x2 = 30;
 			int y2 = 100;
 
 			// 이전 다음 버튼 좌표 초기값
 			int x3 = 50;
 			int y3 = 500;
 
+			// 콤보 박스 좌표 초기값
+			int x4 = 180;
+			int y4 = 160;
+
 			// 버튼 사이즈 (고정)
 			int h = 200;
 			int w = 150;
 
-			// 6개의 버튼, 체크박스, 라벨 만드는 for문
+			// 6개의 버튼, 체크박스, 라벨, 콤보박스 만드는 for문
 			for (int i = 1; i < productCount; i++) {
+
+				// 콤보박스 만들기
+				Integer[] counting = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+				JComboBox<Integer> comboBox = j.makeComboBox(counting, x4, y4, 70, 40, pnl1);
+				y4 += 250;
+
+				if (i % 2 == 0) {
+					y4 = 160;
+					x4 += 250;
+				}
+				listComboBox.add(comboBox);
+				comboBox.setEnabled(false); // 처음엔 콤보박스 비활성화 상태
 
 				// 체크박스 만들기
 				JCheckBox checkBox = j.체크박스만들기(x, y, 20, 20, pnl1);
@@ -104,26 +124,17 @@ public class CategoryPage extends JFrame {
 					y = 65;
 					x += 250;
 				}
-				listche.add(checkBox);
+				listChe.add(checkBox);
 
 				checkBox.addItemListener(new ItemListener() {
 					@Override
 					public void itemStateChanged(ItemEvent e) {
-
-						for (int j = 0; j < flowerList.size(); j++) {
-
-							int countUpdate = flowerList.get(j).getCount() - 1;
-
-							// 체크 박스 선택했을 때 해당 품목 수량이 줄어듦
-							// flower 테이블의 count update
-							if (e.getStateChange() == ItemEvent.SELECTED) {
-								flowerDAO.updateCount(flowerList.get(j).getNo(), countUpdate);
-
-								// 체크 박스 해제했을 때 해당 품목 수량이 원상태로 돌아옴
-								// flower 테이블의 count update
-							} else {
-								flowerDAO.updateCount(flowerList.get(j).getNo(), countUpdate + 1);
-							}
+						// 체크 박스 선택했을 때 해당 품목 콤보 박스가 활성화됨
+						if (e.getStateChange() == ItemEvent.SELECTED) {
+							comboBox.setEnabled(true);
+							// 체크 박스 해제했을 때 해당 품목 콤보 박스가 비활성화됨
+						} else {
+							comboBox.setEnabled(false);
 						}
 					}
 				});
@@ -146,26 +157,20 @@ public class CategoryPage extends JFrame {
 
 				// 라벨만들기
 				String name = flowerList.get(0).getName();
-				JLabel lblProduct = j.라벨만들기(name, f.font3, x2, y2, 250, 150, pnl1);
+				JLabel lblProduct = j.라벨만들기(name, f.font3, x2, y2, 200, 150, pnl1);
 				y2 += 250;
 
 				if (i % 2 == 0) {
 					y2 = 100;
 					x2 += 250;
 				}
+				// 메인에서 카테고리명이 적힌 버튼을 눌렀을 때 이 창이 뜸
+				// 버튼에 적힌 카테고리명에 따라 lblProduct의 텍스트도 바뀜
+//				lblProduct.setText(text); 
 
-				flowerList.remove(0); // 리스트에서 리무브 시키면서 다음걸 당겨옴
+				flowerList.remove(0); // flowerList에서 remove 시키면서 다음걸 당겨옴
 			}
-			
-			// 장바구니 추가 버튼 눌렀을 때
-			// order_detail 테이블에 insert
-			btnInCart.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-//					orderDetailDAO.insert(flowerNo, productCount);
-				}
-			});
-			
+
 			// 메인으로 가기 버튼 눌렀을 때
 			btnGoMain.addActionListener(new ActionListener() {
 				@Override
@@ -199,6 +204,26 @@ public class CategoryPage extends JFrame {
 			}
 			o++;
 		}
+		flowerList = flowerdao.selectAllWithList();
+		
+		// 장바구니 버튼 눌렀을때
+		// order_detail 테이블에 insert
+		btnInCart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < listComboBox.size(); i++) {
+
+					if (listComboBox.get(i).getSelectedIndex() != 0) {
+						flowerList.get(i).getNo();
+
+						orderDetailDAO.insert(flowerList.get(i).getNo(), listComboBox.get(i).getSelectedIndex());
+						// i는 체크박스가 풀려있는거
+					} else {
+						// 체크박스가 false 인것
+					}
+				}
+			}
+		});
 		o = 0;
 
 		for (int i = 0; i < listreturn.size(); i++) {

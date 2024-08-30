@@ -2,6 +2,7 @@ import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -39,10 +40,19 @@ public class makingJ {
 		return btn;
 	}
 	
+	// 패널 만드는 메소드
 	public JPanel makePanel(int x, int y, int width, int height, JPanel pnl) {
 		JPanel includePnl = new JPanel();
 		includePnl.setBounds(x, y, width, height);
 		pnl.add(includePnl);
 		return includePnl;
+	}
+	
+	// 콤보박스 만드는 메소드
+	public JComboBox<Integer> makeComboBox(Integer[] arr, int x, int y, int width, int height, JPanel pnl) {
+		JComboBox<Integer> comboBox = new JComboBox<Integer>(arr);
+		comboBox.setBounds(x, y, width, height);
+		pnl.add(comboBox);
+		return comboBox;
 	}
 }
