@@ -185,6 +185,7 @@ public class ImageDAO {
 
 			int picNumber = LastID(conn);
 			return picNumber;
+			// select문이 와야함
 
 		} catch (SQLException e) {
 			e.printStackTrace();

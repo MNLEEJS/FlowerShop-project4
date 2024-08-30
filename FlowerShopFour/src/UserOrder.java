@@ -39,3 +39,4 @@ class UserOrderMapper implements IResultMapper<UserOrder> {
 		return null;
 	}
 }
+
