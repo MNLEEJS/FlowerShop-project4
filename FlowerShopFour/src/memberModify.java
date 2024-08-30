@@ -43,7 +43,6 @@ public class memberModify extends JDialog {
 	List<JTextField> listTxt = new ArrayList<>(); // 변경할 텍스르 리스르
 
 	public memberModify() {
-
 		JPanel pnl = new JPanel();
 		int x = 60;
 		int y = 220;
@@ -78,9 +77,7 @@ public class memberModify extends JDialog {
 				if (passWord.equals(user.getPW())) {
 					JOptionPane.showMessageDialog(null, "기존비밀번호와 같습니다.");
 				} else if (passWord.equals(passWOK)) {
-					if (PWcount == 0) {
-						PWcount++;
-					}
+					PWcount++;
 					listTxt.get(0).setEnabled(false);
 					listpassWord.get(0).setEnabled(false);
 					btnpassWord.setEnabled(false);
@@ -112,7 +109,6 @@ public class memberModify extends JDialog {
 				} else {
 					JOptionPane.showMessageDialog(null, "정보를 다시 확인하세요.");
 				}
-
 			}
 		});
 		JButton btnBack = makeJ.버튼만들기("뒤로가기", f.font5, 350, 450, 130, 100, pnl);
@@ -138,14 +134,15 @@ public class memberModify extends JDialog {
 				// 업데이트문 만들기
 				if (passWordChe > 0 && PWcount > 0) {
 					passWord = listTxt.get(0).getText();
-				} else if (passWordChe > 0) {
-					JOptionPane.showMessageDialog(null, "비밀번호 확인해주세요");
+					System.out.println("비밀번호 수정");
 				}
 				if (addressChe > 0) {
 					phoneNum = listTxt.get(1).getText();
+					System.out.println("휴대폰번호 수정");
 				}
 				if (phoneNumChe > 0) {
 					address = listTxt.get(2).getText();
+					System.out.println("주소 수정");
 				}
 
 				int update = MIF.update(phoneNum, user.getID(), passWord, address);
@@ -180,32 +177,23 @@ public class memberModify extends JDialog {
 				public void itemStateChanged(ItemEvent e) {
 					// 눌렀을떄
 					if (e.getStateChange() == ItemEvent.SELECTED) {
-						CheckBoxItemEvent(forcount);
+						if (forcount == 0) {
+							passWordChe++;
+						} else if (forcount == 1) {
+							phoneNumChe++;
+							System.out.println(phoneNumChe);
+						} else if (forcount == 2) {
+							addressChe++;
+						}
 						// 취소했을때
 					} else {
-						CheckBoxItemEvent2(forcount);
-					}
-				}
-
-				// 체크박스를 눌렀을때 조건
-				private void CheckBoxItemEvent(int checkNum) {
-					if (forcount == checkNum && PWcount > 0) {
-						passWordChe++;
-					} else if (forcount == checkNum) {
-						phoneNumChe++;
-					} else if (forcount == checkNum && checkNum == 2) {
-						addressChe++;
-					}
-				}
-
-				// 체크박스를 취소했을때 조건
-				private void CheckBoxItemEvent2(int checkNum) {
-					if (forcount == checkNum && PWcount > 0) {
-						passWordChe--;
-					} else if (forcount == checkNum) {
-						phoneNumChe--;
-					} else if (forcount == checkNum && checkNum == 2) {
-						addressChe--;
+						if (forcount == 0 && PWcount > 0) {
+							passWordChe--;
+						} else if (forcount == 1) {
+							phoneNumChe--;
+						} else if (forcount == 2) {
+							addressChe--;
+						}
 					}
 				}
 			});

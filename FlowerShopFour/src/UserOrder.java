@@ -9,8 +9,6 @@ import lombok.Data;
 @Builder
 
 // 작성자 : 이아현
-
-
 public class UserOrder {
 	// 회원 주문 정보
 	// 주문 번호, 회원 번호
