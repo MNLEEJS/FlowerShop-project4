@@ -62,6 +62,7 @@ class OrderDetailService {
 public class OrderDetailDAO {
 	OrderDetailMapper orderDetailMapper = new OrderDetailMapper();
 	OrderDetail orderDetail;
+
 	// 작성자 - 이진석
 	// 주문상품번호로 조회해서 주문상품 상세내역 전체리스트 반환
 	public List<OrderDetail> selectOrderDetailNo(int pk) {
@@ -91,6 +92,7 @@ public class OrderDetailDAO {
 		}
 		return null;
 	}
+
 	// 조회 (select)
 	// order_detail 테이블의 전체 컬럼 조회
 	public List<OrderDetail> selectAll() {
@@ -151,17 +153,17 @@ public class OrderDetailDAO {
 	// 고객이 주문한 정보 테이블(orderDetail)의 수량 update 메소드
 	public int update(int count, int no) {
 		String sql = "update order_Detail set count = " + count + " where no = ?";
-		
+
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		
+
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, no);
-			
+
 			int result = stmt.executeUpdate();
-			
+
 			if (result == 1) {
 				return result;
 			}
@@ -173,54 +175,87 @@ public class OrderDetailDAO {
 		}
 		return -1;
 	}
-	   // 결제 완료 시 장바구니(order_detail)을 모두 지워주는 메소드
-	   public int deleteAll() {
-	      String sql = "delete from order_Detail";
 
-	      Connection conn = null;
-	      PreparedStatement stmt = null;
+	// 결제 완료 시 장바구니(order_detail)을 모두 지워주는 메소드
+	public int deleteAll() {
+		String sql = "delete from order_Detail";
 
-	      try {
-	         conn = DBUtil.getConnection("project3");
-	         stmt = conn.prepareStatement(sql);
+		Connection conn = null;
+		PreparedStatement stmt = null;
 
-	         int result = stmt.executeUpdate();
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
 
-	         if (result == 1) {
-	            return result;
-	         }
-	      } catch (SQLException e) {
-	         e.printStackTrace();
+			int result = stmt.executeUpdate();
 
-	      } finally {
-	         DBUtil.closeAll(null, stmt, conn);
-	      }
-	      return -1;
-	   }
+			if (result == 1) {
+				return result;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 
-	   // 결제 완료 시 장바구니(order_detail)에서 체크된 부분만 삭제
-	   public int delete(int no) {
-	      String sql = "delete from order_Detail where no = ?";
+		} finally {
+			DBUtil.closeAll(null, stmt, conn);
+		}
+		return -1;
+	}
 
-	      Connection conn = null;
-	      PreparedStatement stmt = null;
+	// 결제 완료 시 장바구니(order_detail)에서 체크된 부분만 삭제
+	public int delete(int no) {
+		String sql = "delete from order_Detail where no = ?";
 
-	      try {
-	         conn = DBUtil.getConnection("project3");
-	         stmt = conn.prepareStatement(sql);
-	         stmt.setInt(1, no);
+		Connection conn = null;
+		PreparedStatement stmt = null;
 
-	         int result = stmt.executeUpdate();
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, no);
 
-	         if (result == 1) {
-	            return result;
-	         }
-	      } catch (SQLException e) {
-	         e.printStackTrace();
+			int result = stmt.executeUpdate();
 
-	      } finally {
-	         DBUtil.closeAll(null, stmt, conn);
-	      }
-	      return -1;
-	   }
+			if (result == 1) {
+				return result;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(null, stmt, conn);
+		}
+		return -1;
+	}
+
+	public List<OrderDetail> selectOrderDetailbyMemberNo(int pk) {
+		String sql = "select * from order_detail as od inner join\r\n" + "(select * from order_info inner join \r\n"
+				+ "(select membership.no, membership.name, membership.id, user_no from userorder_info \r\n"
+				+ "inner join (select no, name, id from membership where no = ?) as membership on user_no = membership.no) as memberInfo\r\n"
+				+ "   on memberInfo.user_no = order_no) as memberOrderInfo on od.no = memberOrderInfo.flowerorder_no;";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, pk);
+			rs = stmt.executeQuery();
+
+			List<OrderDetail> list = new ArrayList<OrderDetail>();
+			while (rs.next()) {
+				OrderDetail orderDetail = orderDetailMapper.resultMapping(rs);
+				list.add(orderDetail);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return null;
+	}
+
 }

@@ -223,4 +223,29 @@ public class MemberInfo {
 		return -1;
 	}
 
+	// 멤버 죽이기
+	public int deleteMembership(int no) {
+		String sql = "delete from membership where user_no = ?";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, no);
+
+			int result = stmt.executeUpdate();
+
+			if (result == 1) {
+				return result;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(null, stmt, conn);
+		}
+		return -1;
+	}
 }

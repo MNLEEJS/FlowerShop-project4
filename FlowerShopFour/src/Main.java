@@ -32,7 +32,7 @@ public class Main extends JFrame {
 	List<String> listCategory = flowerdao.selectCategory();
 	List<Flower> listFlower = flowerdao.selectAllWithList();
 	List<JButton> listbutton = new ArrayList<JButton>();
-	
+
 	FontL f = new FontL();
 	public JPanel pnl3;
 	public JPanel pnl2;
@@ -40,6 +40,10 @@ public class Main extends JFrame {
 	private JTextField txtID;
 	private JTextField txtPW;
 
+	MemberDeleteDAO MDDAO = new MemberDeleteDAO();
+	UserOrderInfo UOI = new UserOrderInfo();
+	OrderInfoDAO OIDAO = new OrderInfoDAO();
+	OrderDetailDAO ODDAO = new OrderDetailDAO();
 
 	public Main() {
 		super("돼지 꽃다발 화원");
@@ -89,7 +93,7 @@ public class Main extends JFrame {
 			listbutton.get(z).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+
 					String catego = listbutton.get(z).getText();
 					CategoryPage CP = new CategoryPage(catego);
 					CP.user = user;
@@ -118,7 +122,7 @@ public class Main extends JFrame {
 
 				user.setID(txtID.getText());
 				user.setPW(txtPW.getText());
-				
+
 				// 일반회원 조회
 				int countID = 0;
 				int countPW = 0;
@@ -197,6 +201,52 @@ public class Main extends JFrame {
 			}
 		});
 		JButton btnLogOut = j.버튼만들기("회원 탈퇴", f.font3, 30, 300, 200, 100, pnl3);
+		btnLogOut.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				String a = JOptionPane.showInputDialog("정말 탈퇴하시겠습니까? ||'네' 라고 입력하세요");
+				if (a.equals("네")) {
+					MDDAO.insert(user.getID()); // 삭제할 유저의 정보를 논리적 삭제 구현
+					// 유저의 정보 조회
+					List<Membership> userList = MDDAO.selectMembershipID(user.getID());
+					// 유저오더인포 정보
+					List<UserOrder> userorderInfoList = UOI.findByPk(userList.get(0).getNo(), "user_NO");
+					// 시팔 몰라
+					List<OrderInfo> ordertInfoList = OIDAO.selectOrderNo(userorderInfoList.get(0).getUser_no());
+					// 로그인한 유저로 정보를 조회
+					List<OrderDetail> orderDetailList = ODDAO
+							.selectOrderDetailNo(ordertInfoList.get(0).getFlowerOrderNo());
+
+					// 1 . 주문정보 테이블 삭제 완료
+					MDDAO.deleteOrder_info(userorderInfoList.get(0).getNo());
+					// 2. 회원 주문 정보 테이블 삭제
+					MDDAO.deleteUserOrder_info(userList.get(0).getNo());
+					// 3. 주문상세 내역 테이블 삭제
+					// 얘는 PK기준으로 삭제라서 여러PK가 있기에 FOR문 돌림
+					for (int i = 0; i < ordertInfoList.size(); i++) {
+						MDDAO.deleteOrder_detail(ordertInfoList.get(i).getOrderNo());
+					}
+					// 멤버쉽 테이블에서도 마무으리 삭제
+					Mif.deleteMembership(userList.get(0).getNo());
+					for (int j = 0; j < orderDetailList.size(); j++) {
+						orderDetailList.remove(j);
+					}
+					for (int i = 0; i < ordertInfoList.size(); i++) {
+						ordertInfoList.remove(i);
+					}
+					for (int j = 0; j < userorderInfoList.size(); j++) {
+						userorderInfoList.remove(j);
+					}
+					for (int i = 0; i < userList.size(); i++) {
+						userList.remove(i);
+					}
+					JOptionPane.showMessageDialog(null, "탈퇴완료 되었습니다.");
+				} else {
+					JOptionPane.showMessageDialog(null, "탈퇴되지 않았습니다.");
+				}
+			}
+		});
 		JButton btnOut = j.버튼만들기("로그아웃", f.font3, 250, 300, 200, 100, pnl3);
 		btnOut.addActionListener(new ActionListener() {
 			@Override

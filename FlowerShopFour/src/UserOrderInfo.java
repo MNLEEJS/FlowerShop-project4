@@ -16,7 +16,7 @@ public class UserOrderInfo {
 	UserOrderMapper userOrderMapper = new UserOrderMapper();
 
 	// 주문 번호, 회원 번호 정보를 담을 리스트 생성
-	public List<UserOrder> findByPk(int pk1, int pk2, String column) {
+	public List<UserOrder> findByPk(int pk2, String column) {
 
 		String sql = "SELECT * FROM UserOrder_info WHERE " + column + " = ?";
 
@@ -29,11 +29,7 @@ public class UserOrderInfo {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
 
-			if (column.equals("no")) {
-				stmt.setInt(1, pk1);
-			} else if (column.equals("user_no")) {
-				stmt.setInt(1, pk2);
-			}
+			stmt.setInt(1, pk2);
 			rs = stmt.executeQuery();
 
 			// while 사용해서 회원 주문 정보를 담을 리스트들을 계속해서 저장할 수 있도록 함

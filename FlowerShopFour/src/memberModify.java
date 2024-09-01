@@ -144,7 +144,7 @@ public class memberModify extends JDialog {
 					address = listTxt.get(2).getText();
 					System.out.println("주소 수정");
 				}
-
+				
 				int update = MIF.update(phoneNum, user.getID(), passWord, address);
 				if (update > 0) {
 					JOptionPane.showMessageDialog(null, "성공");

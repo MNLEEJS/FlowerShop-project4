@@ -30,8 +30,8 @@ class OrderInfoMapper implements IResultMapper<OrderInfo> {
 	@Override
 	public OrderInfo resultMapping(ResultSet rs) {
 		try {
-			int orderNo = rs.getInt("orderNo");
-			int flowerOrderNo = rs.getInt("flowerOrderNo");
+			int orderNo = rs.getInt("order_No");
+			int flowerOrderNo = rs.getInt("flowerOrder_No");
 			int sellingCheck = rs.getInt("sellingCheck");
 			return OrderInfo.builder().orderNo(orderNo).flowerOrderNo(flowerOrderNo).sellingCheck(sellingCheck).build();
 
@@ -64,7 +64,7 @@ public class OrderInfoDAO {
 	// 작성자 -- 이진석
 	// 주문번호로 조회해서 리스트값을 출력받는
 	public List<OrderInfo> selectOrderNo(int pk) {
-		String sql = "select * from order_info Where orderNo = ?";
+		String sql = "select * from order_info Where order_No = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
