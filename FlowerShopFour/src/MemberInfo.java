@@ -13,6 +13,34 @@ public class MemberInfo {
 	MembershipMapper membershipMapper = new MembershipMapper();
 	List<String> listID = new ArrayList<String>();
 
+	public List<Membership> selectAll() {
+		String sql = "SELECT * FROM membership";
+
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			List<Membership> list = new ArrayList<Membership>();
+			while (rs.next()) {
+				Membership membership = membershipMapper.resultMapping(rs);
+				list.add(membership);
+			}
+
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return null;
+	}
+
 	public List<String> PWseach() {
 		String sql = "SELECT PW FROM membership";
 		Connection conn = null;
@@ -182,13 +210,11 @@ public class MemberInfo {
 				stmt.setString(4, id);
 			}
 
-			
-
 			int result = stmt.executeUpdate();
 			if (result == 1) {
 				return result;
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

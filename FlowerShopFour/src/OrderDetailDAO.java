@@ -62,7 +62,35 @@ class OrderDetailService {
 public class OrderDetailDAO {
 	OrderDetailMapper orderDetailMapper = new OrderDetailMapper();
 	OrderDetail orderDetail;
+	// 작성자 - 이진석
+	// 주문상품번호로 조회해서 주문상품 상세내역 전체리스트 반환
+	public List<OrderDetail> selectOrderDetailNo(int pk) {
+		String sql = "select * from option_detail Where no  = ?";
 
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, pk);
+			rs = stmt.executeQuery();
+
+			List<OrderDetail> list = new ArrayList<OrderDetail>();
+			while (rs.next()) {
+				OrderDetail orderDetail = orderDetailMapper.resultMapping(rs);
+				list.add(orderDetail);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return null;
+	}
 	// 조회 (select)
 	// order_detail 테이블의 전체 컬럼 조회
 	public List<OrderDetail> selectAll() {
@@ -145,4 +173,54 @@ public class OrderDetailDAO {
 		}
 		return -1;
 	}
+	   // 결제 완료 시 장바구니(order_detail)을 모두 지워주는 메소드
+	   public int deleteAll() {
+	      String sql = "delete from order_Detail";
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+
+	      try {
+	         conn = DBUtil.getConnection("project3");
+	         stmt = conn.prepareStatement(sql);
+
+	         int result = stmt.executeUpdate();
+
+	         if (result == 1) {
+	            return result;
+	         }
+	      } catch (SQLException e) {
+	         e.printStackTrace();
+
+	      } finally {
+	         DBUtil.closeAll(null, stmt, conn);
+	      }
+	      return -1;
+	   }
+
+	   // 결제 완료 시 장바구니(order_detail)에서 체크된 부분만 삭제
+	   public int delete(int no) {
+	      String sql = "delete from order_Detail where no = ?";
+
+	      Connection conn = null;
+	      PreparedStatement stmt = null;
+
+	      try {
+	         conn = DBUtil.getConnection("project3");
+	         stmt = conn.prepareStatement(sql);
+	         stmt.setInt(1, no);
+
+	         int result = stmt.executeUpdate();
+
+	         if (result == 1) {
+	            return result;
+	         }
+	      } catch (SQLException e) {
+	         e.printStackTrace();
+
+	      } finally {
+	         DBUtil.closeAll(null, stmt, conn);
+	      }
+	      return -1;
+	   }
 }

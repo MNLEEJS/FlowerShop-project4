@@ -22,10 +22,44 @@ public class ManagerSellingCheck extends JDialog {
 	makingJ j = new makingJ();
 	FontL font = new FontL();
 	// 유저전체의 번호를 조회 > 그 번호로 주문번호 전체 조회 > 주문번호로 총 가격 조회해서 매출 출력
-	
+	MemberInfo MIF = new MemberInfo();
+	// 모든 유저의 조회
+	List<Membership> memberList = MIF.selectAll();
+	// 회원 주문 목록 테이블에서 회원 번호로 조회해서 주문번호 전체 출력받기
+	UserOrderInfo UOI = new UserOrderInfo();
+	// 리스트로 출력받을 리스트 선언
+	List<UserOrder> userOrderList = new ArrayList<UserOrder>();
+	// 주문 정보를 출력받기 위해 선언
+	OrderInfoDAO OIDAO = new OrderInfoDAO(); 
+	// 주문 정보를 출력받아 저장해놓을 리스트 선언
+	List<OrderInfo> orderInfoList = new ArrayList<OrderInfo>();
+	// 주문상품번호로 주문상세내역 테이블 전체 받기위한 클래스 선언
+	OrderDetailDAO ODDAO = new OrderDetailDAO();
+	// 주문 상세 내역의 리스트
+	List<OrderDetail> orderDetail = new ArrayList<OrderDetail>();
 	
 	public ManagerSellingCheck() {
 		setModal(true);
+		// 회원번호로  주문한적이 있는 주문번호 다 출력받기
+		for (int i = 0; i < memberList.size(); i++) {
+			List<UserOrder> List = UOI.findByPk(0, memberList.get(i).getNo(), "user_no");
+			userOrderList.addAll(List);
+		}
+		// 주문번호로 조회해서 주문 정보 다  출력받아  저장하기
+		 for (int i = 0; i < userOrderList.size(); i++) {
+			List<OrderInfo> List = OIDAO.selectOrderNo(userOrderList.get(i).getNo());
+			orderInfoList.addAll(List);
+		}
+		 // 주문상세내역테이블 리스트에 전체 넣기
+		for (int i = 0; i < orderInfoList.size(); i++) {
+			List<OrderDetail> List = ODDAO.selectOrderDetailNo(orderInfoList.get(i).getFlowerOrderNo());
+			orderDetail.addAll(List);
+		}  
+		
+		// 위에꺼 이용해서 for문 돌려서 gui 완성하기
+		
+		
+		
 		setSize(new Dimension(900, 500));
 		setLayout(null);
 
@@ -46,13 +80,14 @@ public class ManagerSellingCheck extends JDialog {
 		int lblHeight = 40;
 		int lblCount = 5;
 
-		String lblName = "1000";
-		String lblName2 = "졸업식 꽃다발 안개꽃";
-		String lblName3 = "수량 : " + "1개";
-		String lblName4 = "가격 : " + "100,000 원";
-		String lblName5 = "판매 완료";
 
 		for (int i = 0; i < lblCount; i++) {
+			String lblName = "1000";
+			String lblName2 = "졸업식 꽃다발 안개꽃";
+			String lblName3 = "수량 : " + "1개";
+			String lblName4 = "가격 : " + "100,000 원";
+			String lblName5 = "판매 완료";
+			
 			// 회원 번호 레이블 (값을 가져와서 레이블의 텍스트 변경 예정)
 			JLabel lblMemberNo = j.라벨만들기(lblName, font.font4, lblX, lblY, lblWidth - 120, lblHeight, pnlBase2);
 			// 꽃다발 이름 레이블 (값을 가져와서 레이블의 텍스트 변경 예정)

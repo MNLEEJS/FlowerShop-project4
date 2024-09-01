@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import dbutil.DBUtil;
 import lombok.AllArgsConstructor;
@@ -60,6 +62,36 @@ public class OrderInfoDAO {
 	OrderInfoMapper orderInfoMapper = new OrderInfoMapper();
 	OrderInfo orderInfo;
 
+	// 작성자 -- 이진석
+	// 주문번호로 조회해서 리스트값을 출력받는
+	public List<OrderInfo> selectOrderNo(int pk) {
+		String sql = "select * from order_info Where orderNo = ?";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, pk);
+			rs = stmt.executeQuery();
+
+			List<OrderInfo> list = new ArrayList<OrderInfo>();
+			while (rs.next()) {
+				OrderInfo orderInfo = orderInfoMapper.resultMapping(rs);
+				list.add(orderInfo);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return null;
+	}
+
 	// 조회 (select)
 	// order_info 테이블의 전체 컬럼 조회
 	public OrderInfo selectAll() {
@@ -81,6 +113,8 @@ public class OrderInfoDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
 		}
 		return null;
 	}

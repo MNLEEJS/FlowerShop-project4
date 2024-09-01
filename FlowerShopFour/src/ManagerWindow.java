@@ -18,13 +18,13 @@ import javax.swing.SwingConstants;
 // 작업자 : 이나겸
 // 관리자 화면의 메인 페이지 GUI 구현
 
-public class ManagerWindow extends JDialog{
+public class ManagerWindow extends JDialog {
 	OwnerPageFrame OPF = new OwnerPageFrame();
 	AddColumn AC = new AddColumn();
-	ManagerSellingCheck MSC = new ManagerSellingCheck() ;
+	ManagerSellingCheck MSC = new ManagerSellingCheck();
 	makingJ j = new makingJ();
 	FontL font = new FontL();
-	
+
 	public ManagerWindow() {
 		setModal(true);
 		setSize(new Dimension(500, 500));
@@ -44,7 +44,7 @@ public class ManagerWindow extends JDialog{
 
 		// JLable 생성 메소드 호출
 		JLabel lblTitle = j.라벨만들기("관리자 페이지", font.font3, 140, 15, 250, 40, pnlBase);
-		
+
 		JLabel lblTotalSales = j.라벨만들기("총 매출 : " + " 원", font.font4, 17, 364, 215, 25, pnlIncludeLabel);
 
 		JLabel lblTotalOrderCount = j.라벨만들기("총 주문 건수 : " + " 건", font.font4, 17, 404, 215, 25, pnlIncludeLabel);
@@ -95,12 +95,12 @@ public class ManagerWindow extends JDialog{
 		int btnHeight = 40; // 세로 초기값 (맨 위에 있는 버튼)
 		int btnCount = 4; // for문이 돌아갈 횟수 (생성할 버튼 개수)
 
-		String btnName ; // 버튼 이름 초기값 (맨 위에 있는 버튼)
+		String btnName; // 버튼 이름 초기값 (맨 위에 있는 버튼)
 
 		for (int i = 0; i < btnCount; i++) {
-			
+
 			if (i == 0) {
-				btnName= "카테고리 추가";
+				btnName = "카테고리 추가";
 				JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
 				btn.addActionListener(new ActionListener() {
 					@Override
@@ -121,10 +121,9 @@ public class ManagerWindow extends JDialog{
 				btnName = "현재 주문 상품";
 				JButton btn = j.버튼만들기(btnName, font.font4, btnX, btnY, btnWidth, btnHeight, pnlBase);
 				btn.addActionListener(new ActionListener() {
-					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						MSC.setVisible(true);						
+						MSC.setVisible(true);
 					}
 				});
 			} else if (i == 3) {
