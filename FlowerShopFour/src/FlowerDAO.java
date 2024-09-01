@@ -86,6 +86,36 @@ public class FlowerDAO {
 //	}
 
 //select count(*) from (select * from flower group by category) as a;
+	
+//  작성자 - 이진석 
+// 사용할 거 따로 만들어 놓음
+ // 수량이 3개 이하로 남은 꽃다발만 출력
+ public List<Flower> selectcategoryLowConut() {
+    String sql = "select * from flower where count between 0 AND 2 order by count";
+
+    List<Flower> list = new ArrayList<>();
+
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+
+    try {
+       conn = DBUtil.getConnection("project3");
+       stmt = conn.createStatement();
+       rs = stmt.executeQuery(sql);
+
+       while (rs.next()) {
+          Flower flower = flowerMapper.resultMapping(rs);
+          list.add(flower);
+       }
+       return list;
+
+    } catch (SQLException e) {
+       e.printStackTrace();
+    }
+    return null;
+ }
+	
 	// 만들어놓은 카테고리의 값을 찾는
 	public List<String> selectCategory() {
 		String sql = "select category from (select * from flower group by category) as a";
@@ -111,6 +141,8 @@ public class FlowerDAO {
 		return null;
 	}
 
+	
+	
 	public List<Flower> selectWhere(String column, String columnName) {
 		String sql = "select * from flower Where " + column + " = ?";
 
@@ -300,4 +332,32 @@ public class FlowerDAO {
 		}
 		return -1;
 	}
+	
+	// count값 수정 (update) 아현추가
+	// flower 테이블의 count 컬럼의 값을 update해주는 메소드
+	// 장바구니에서 결제 선택 시 장바구니에 담긴 수량 만큼 flower의 수량을 감소
+	public int updatePayCount(int no, int count) {
+		String sql = "update flower set count = count - ? where no = ?";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, count);
+			stmt.setInt(2, no);
+
+			return 1;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return -1;
+	}
+	
 }
