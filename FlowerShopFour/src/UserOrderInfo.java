@@ -18,7 +18,7 @@ public class UserOrderInfo {
 	// 주문 번호, 회원 번호 정보를 담을 리스트 생성
 	public List<UserOrder> findByPk(int pk1, int pk2, String column) {
 
-		String sql = "SELECT * FROM UserOrder WHERE " + column + " = ?";
+		String sql = "SELECT * FROM UserOrder_info WHERE " + column + " = ?";
 
 		List<UserOrder> userInfoList = new ArrayList<>();
 		Connection conn = null;

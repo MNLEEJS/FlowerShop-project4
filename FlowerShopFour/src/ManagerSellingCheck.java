@@ -24,7 +24,7 @@ public class ManagerSellingCheck extends JDialog {
 	// 유저전체의 번호를 조회 > 그 번호로 주문번호 전체 조회 > 주문번호로 총 가격 조회해서 매출 출력
 	MemberInfo MIF = new MemberInfo();
 	// 모든 유저의 조회
-	List<Membership> memberList = MIF.selectAll();
+	
 	// 회원 주문 목록 테이블에서 회원 번호로 조회해서 주문번호 전체 출력받기
 	UserOrderInfo UOI = new UserOrderInfo();
 	// 리스트로 출력받을 리스트 선언
@@ -41,6 +41,7 @@ public class ManagerSellingCheck extends JDialog {
 	public ManagerSellingCheck() {
 		setModal(true);
 		// 회원번호로  주문한적이 있는 주문번호 다 출력받기
+		List<Membership> memberList = MIF.selectAll();
 		for (int i = 0; i < memberList.size(); i++) {
 			List<UserOrder> List = UOI.findByPk(0, memberList.get(i).getNo(), "user_no");
 			userOrderList.addAll(List);
