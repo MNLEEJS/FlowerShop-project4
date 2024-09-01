@@ -21,7 +21,7 @@ import lombok.Data;
 class OrderInfo {
 	private int orderNo;
 	private int flowerOrderNo;
-	private Date date;
+	private int sellingCheck;
 }
 
 //Mapper
@@ -32,9 +32,8 @@ class OrderInfoMapper implements IResultMapper<OrderInfo> {
 		try {
 			int orderNo = rs.getInt("orderNo");
 			int flowerOrderNo = rs.getInt("flowerOrderNo");
-			Date date = rs.getDate("date");
-			System.out.println(date);
-			return OrderInfo.builder().orderNo(orderNo).flowerOrderNo(flowerOrderNo).date(date).build();
+			int sellingCheck = rs.getInt("sellingCheck");
+			return OrderInfo.builder().orderNo(orderNo).flowerOrderNo(flowerOrderNo).sellingCheck(sellingCheck).build();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -123,8 +122,8 @@ public class OrderInfoDAO {
 	// order_info 테이블의 각 컬럼에 값을 insert해주는 메소드
 	// insert가 정상적으로 되면 return 1
 	// insert가 정상적으로 되지않으면 return -1
-	public int insert(int orderNo, int flowerOrderNo, Date date) {
-		String sql = "insert into option_detail (orderNo, flowerOrderNo, date) values (?, ?, ?)";
+	public int insert(int orderNo, int flowerOrderNo, int sellingCheck) {
+		String sql = "insert into option_detail (orderNo, flowerOrderNo, sellingCheck) values (?, ?, ?)";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -134,7 +133,7 @@ public class OrderInfoDAO {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, orderNo);
 			stmt.setInt(2, flowerOrderNo);
-			stmt.setDate(3, date);
+			stmt.setInt(3, sellingCheck);
 
 			int result = stmt.executeUpdate();
 
