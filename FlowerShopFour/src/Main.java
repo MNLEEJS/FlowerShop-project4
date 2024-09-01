@@ -86,9 +86,10 @@ public class Main extends JFrame {
 			int z = a;
 
 			// 각 카테고리 별 버튼을 누르면 해당 카테고리 화면(다이얼로그창)이 뜸
-			listbutton.get(a).addActionListener(new ActionListener() {
+			listbutton.get(z).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					
 					String catego = listbutton.get(z).getText();
 					CategoryPage CP = new CategoryPage(catego);
 					CP.user = user;

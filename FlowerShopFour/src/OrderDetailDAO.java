@@ -65,7 +65,7 @@ public class OrderDetailDAO {
 	// 작성자 - 이진석
 	// 주문상품번호로 조회해서 주문상품 상세내역 전체리스트 반환
 	public List<OrderDetail> selectOrderDetailNo(int pk) {
-		String sql = "select * from option_detail Where no  = ?";
+		String sql = "select * from order_detail Where no  = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
