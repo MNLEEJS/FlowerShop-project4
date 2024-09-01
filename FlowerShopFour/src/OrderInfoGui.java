@@ -33,11 +33,11 @@ public class OrderInfoGui extends JFrame {
 	FontL f = new FontL();
 	JCheckBox c = new JCheckBox();
 	JTextField txt = new JTextField();
-
+	
 	OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
 	FlowerDAO dao = new FlowerDAO();
 	ImageDAO Idao = new ImageDAO();
-
+	
 	List<Flower> flowerDBlist = new ArrayList<Flower>(); // Flower DB에 있는 정보를 담고 있는 List
 	List<OrderDetail> orderDetailList = orderDetailDAO.selectAll(); // OrderDetail DB에 있는 정보를 모두 담고 있는 List
 	List<JCheckBox> checkboxList = new ArrayList<>(); // 사용자의 체크박스를 담고 있는 List
@@ -46,7 +46,7 @@ public class OrderInfoGui extends JFrame {
 	List<JLabel> productNameLblList = new ArrayList<>(); // 상품명을 담고 있는 레이블 List
 	List<JLabel> productPriceLblList = new ArrayList<>(); // 상품가격을 담고 있는 레이블 List
 	ImageFileInsert IFI = new ImageFileInsert();
-
+	
 	// 주문정보를 담을 패널 구성
 	JPanel pnl = new JPanel();
 	
@@ -116,7 +116,10 @@ public class OrderInfoGui extends JFrame {
 					PE.setVisible(true);
 				}
 			});
-
+			
+			// 상품의 번호를 가져옴
+			int orderNo = orderDetailList.get(i).getNo();
+			
 			// 상품의 상세정보를 담고있는 db정보
 			String product = flowerDBlist.get(i).getName();
 			int price = flowerDBlist.get(i).getPrice();
@@ -148,23 +151,23 @@ public class OrderInfoGui extends JFrame {
 					String comboboxTxt = (String) comboBoxCountList.get(index).getSelectedItem();
 					int selectedCounting = Integer.parseInt(comboboxTxt.substring(0, 1));
 					productPriceLblList.get(index).setText("금액 합계 : " + price * selectedCounting);
-
+					
 				}
 			});
-
+			
 			// 콤보박스 수량에 이미 입력되어 있는 배열을 인덱스 값을 통해 출력함
 			for (int j = 0; j < comboBoxCountList.size(); j++) {
 				int a = comboBoxCountList.get(j).getSelectedIndex();
 			}
-
+			
 			// 패널에 콤보 박스 사이즈 지정 및 추가
 			pnl.add(comboBoxCountList.get(i));
 			comboBoxCountList.get(i).setBounds(170, y + 50, 100, 50);
 			y += 120;
 		}
+		
+		// ------------------------------------- 버튼 액션 추가-------------------------------
 
-		// ------------------------------------------------------------------- 버튼 액션 추가
-		// -------------------------------------------------------
 
 		// 카테고리 메인으로 이동 버튼
 		btn1.addActionListener(new ActionListener() {
