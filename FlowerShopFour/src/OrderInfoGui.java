@@ -25,10 +25,21 @@ import javafx.scene.control.ComboBox;
 
 //작성자 : 이아현
 
+
+// 1. 화면에 주문 내역 6개 이상 보이도록 만들기
+// 2. 회원 정보로 insert된 값을 update 만들기
+// 3. 결제 후 delete 및 update 수정
+// 4. 결제창 다이얼로그 만들기
+// 5. 디자인, 이미지 넣기
+// 6. ppt 꽃다발 이미지 픽셀 따오기
+// 결제 기본값 0 - > 1로 바뀌게
+
+
+
 // 구매자를 위한 주문 구성의 선택과 취소창
 
 public class OrderInfoGui extends JFrame {
-
+	 String customerId;
 	makingJ j = new makingJ();
 	FontL f = new FontL();
 	JCheckBox c = new JCheckBox();
@@ -50,9 +61,10 @@ public class OrderInfoGui extends JFrame {
 	// 주문정보를 담을 패널 구성
 	JPanel pnl = new JPanel();
 	
-	// 주문 확인창 라벨
+	// 주문 확인창 레이블
 	JLabel lbl1 = j.라벨만들기("주문확인창", f.font5, 10, 50, 110, 50, pnl);
 	JLabel lbl2 = j.라벨만들기("주문 내역", f.font5, 10, 110, 260, 50, pnl);
+	
 	// 주문 확인창 버튼
 	JButton btn1 = j.버튼만들기("메인화면", f.font5, 180, 50, 120, 60, pnl);
 	JButton btn2 = j.버튼만들기("전체선택", f.font5, 320, 50, 120, 60, pnl);
@@ -61,8 +73,12 @@ public class OrderInfoGui extends JFrame {
 	JButton btn5 = j.버튼만들기("변경", f.font5, 620, 150, 150, 100, pnl);
 	JButton btn6 = j.버튼만들기("삭제", f.font5, 620, 300, 150, 100, pnl);
 
-	public OrderInfoGui() {
-
+	// 회원정보를 파라미터 값으로 받아옴
+	public OrderInfoGui(String customerId) {
+		this.customerId = customerId;
+		List<OrderDetail> orderNoList = orderDetailDAO.selectOrderDetailbyMemberNo(customerId);
+		
+		JLabel lblMemberID = j.라벨만들기(customerId + " 회원님", f.font5, 10, 80, 200, 50, pnl);
 		int y = 180;
 
 		// db안에있는 플라워 전체 들고오기
@@ -75,7 +91,7 @@ public class OrderInfoGui extends JFrame {
 		setLayout(null);
 		setSize(new Dimension(900, 860));
 
-		// ------------------------------- 콤보박스 ---------------------------
+		// -------------------------------콤보박스 ---------------------------
 
 		// 콤보 박스에 담을 수량 생성을 위한 배열
 		String[] count = { "1개", "2개", "3개", "4개", "5개", "6개", "7개", "8개" };
@@ -83,16 +99,16 @@ public class OrderInfoGui extends JFrame {
 		// 개수 값 list.count로 받아올 수 있음
 		// 최대 개수를 미리 정하고 크기만큼 string count에 넣어줘야함
 
-//		---------------- 콤보박스 개수 행 추가 for문
+		// ---------------- 콤보박스 개수 행 추가 for문 --------------------------------------
 
-		for (int i = 0; i < orderDetailList.size(); i++) {
+		for (int i = 0; i < orderNoList.size(); i++) {
 			JComboBox<String> counting = new JComboBox<>(count);
 			comboBoxCountList.add(counting);
 		}
 
-//--------------- 전체 틀(버튼, 레이블, 콤보 박스)을 반복 생성 for문-----------------------------------
+//--------------- 전체 틀(버튼, 레이블, 콤보 박스)을 반복 생성 for문 -----------------------------------
 
-		for (int i = 0; i < orderDetailList.size(); i++) {
+		for (int i = 0; i < orderNoList.size(); i++) {
 
 			final int index = i;
 
@@ -118,7 +134,10 @@ public class OrderInfoGui extends JFrame {
 			});
 			
 			// 상품의 번호를 가져옴
-			int orderNo = orderDetailList.get(i).getNo();
+			int orderNo = orderNoList.get(i).getNo();
+			
+			
+			// update(userSelectCount, orderDetailList.get(i).getNo());
 			
 			// 상품의 상세정보를 담고있는 db정보
 			String product = flowerDBlist.get(i).getName();
@@ -126,7 +145,7 @@ public class OrderInfoGui extends JFrame {
 			productNameLblList.add(j.라벨만들기("상품명 : " + product, f.font5, 170, y, 200, 50, pnl));
 
 			// 추후 입력 받을 수량을 인덱스 안에 넣어줘야함
-			comboBoxCountList.get(index).setSelectedIndex(orderDetailList.get(i).getCount() - 1);
+			comboBoxCountList.get(index).setSelectedIndex(orderNoList.get(i).getCount() - 1);
 
 			// 상품의 상세정보에 대한 콤보 박스에 들어갈 개수 리스트
 			String detailProduct = (String) comboBoxCountList.get(index).getSelectedItem();
@@ -186,7 +205,7 @@ public class OrderInfoGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < 4; i++) {
+				for (int i = 0; i < 9; i++) {
 
 					checkboxList.get(i).setSelected(true);
 				}
@@ -199,7 +218,7 @@ public class OrderInfoGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < 4; i++) {
+				for (int i = 0; i < 9; i++) {
 
 					checkboxList.get(i).setSelected(false);
 				}
@@ -222,7 +241,7 @@ public class OrderInfoGui extends JFrame {
 						int userSelectCount = Integer.parseInt(userSelectCountString);
 
 						// 바꿔준 콤보박스의 수량대로 DB에 업데이트
-						int updateCount = orderDetailDAO.update(userSelectCount, orderDetailList.get(i).getNo());
+						int updateCount = orderDetailDAO.update(userSelectCount, orderNoList.get(i).getNo());
 						chkUpdate++;
 					}
 
@@ -258,7 +277,7 @@ public class OrderInfoGui extends JFrame {
 						pnl.revalidate();
 						pnl.repaint();
 
-						int deleteCount = orderDetailDAO.delete(orderDetailList.get(i).getNo());
+						int deleteCount = orderDetailDAO.delete(orderNoList.get(i).getNo());
 						chkDelete++;
 					}
 
@@ -297,7 +316,7 @@ public class OrderInfoGui extends JFrame {
 
 	public static void main(String[] args) {
 
-		new OrderInfoGui().setVisible(true);
+		new OrderInfoGui("aaaa").setVisible(true);
 
 	}
 }

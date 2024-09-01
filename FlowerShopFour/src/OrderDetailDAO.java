@@ -227,10 +227,42 @@ public class OrderDetailDAO {
 		return -1;
 	}
 
-	public List<OrderDetail> selectOrderDetailbyMemberNo(int pk) {
-		String sql = "select * from order_detail as od inner join\r\n" + "(select * from order_info inner join \r\n"
+	
+//	public List<Integer> selectOrderDetailbyMemberNo(String id) {
+//		String sql = "select od.flower_no, od.count, od.no from order_detail as od inner join\r\n" + "(select * from order_info inner join \r\n"
+//				+ "(select membership.no, membership.name, membership.id, user_no from userorder_info \r\n"
+//				+ "inner join (select no, name, id from membership where id = ?) as membership on user_no = membership.no) as memberInfo\r\n"
+//				+ "   on memberInfo.user_no = order_no) as memberOrderInfo on od.no = memberOrderInfo.flowerorder_no;";
+//
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
+//
+//		try {
+//			conn = DBUtil.getConnection("project3");
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, id);
+//			rs = stmt.executeQuery();
+//
+//			List<Integer> list = new ArrayList<>();
+//			while (rs.next()) {
+//				int num = rs.getInt(1);
+//				list.add(num);
+//			}
+//			return list;
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.closeAll(rs, stmt, conn);
+//		}
+//		return null;
+//	}
+
+	public List<OrderDetail> selectOrderDetailbyMemberNo(String id) {
+		String sql = "select od.flower_no, od.count, od.no from order_detail as od inner join\r\n" + "(select * from order_info inner join \r\n"
 				+ "(select membership.no, membership.name, membership.id, user_no from userorder_info \r\n"
-				+ "inner join (select no, name, id from membership where no = ?) as membership on user_no = membership.no) as memberInfo\r\n"
+				+ "inner join (select no, name, id from membership where id = ?) as membership on user_no = membership.no) as memberInfo\r\n"
 				+ "   on memberInfo.user_no = order_no) as memberOrderInfo on od.no = memberOrderInfo.flowerorder_no;";
 
 		Connection conn = null;
@@ -240,7 +272,7 @@ public class OrderDetailDAO {
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, pk);
+			stmt.setString(1, id);
 			rs = stmt.executeQuery();
 
 			List<OrderDetail> list = new ArrayList<OrderDetail>();
