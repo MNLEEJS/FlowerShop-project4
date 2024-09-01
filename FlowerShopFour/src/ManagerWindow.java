@@ -29,6 +29,8 @@ public class ManagerWindow extends JDialog {
 		setModal(true);
 		setSize(new Dimension(500, 500));
 		setLayout(null);
+		
+		
 
 // <관리자 화면의 메인 페이지>---------------------------------------------------------------------------------------------------
 
