@@ -23,11 +23,10 @@ import org.omg.PortableServer.IdAssignmentPolicyOperations;
 public class CategoryPage extends JDialog {
 	makingJ j = new makingJ();
 	FontL f = new FontL();
-	FlowerDAO flowerDAO = new FlowerDAO();
+	FlowerDAO flowerdao = new FlowerDAO();
 	ImageFileInsert imageFileInsert = new ImageFileInsert();
 	ImageDAO imageDAO = new ImageDAO();
 	OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
-
 	// 이미지 버튼 리스트
 	List<JButton> listBtn = new ArrayList<JButton>();
 	// 체크박스 리스트
@@ -41,7 +40,6 @@ public class CategoryPage extends JDialog {
 	// 클래스 리스트
 	List<ListClass> listClass = new ArrayList<ListClass>();
 	Map<List<JPanel>, List<ListClass>> map;
-	FlowerDAO flowerdao = new FlowerDAO();
 	// flower 테이블 전체 조회해서 담는 리스트
 	List<Flower> flowerList = flowerdao.selectAllWithList();
 	// 이미지 버튼에 이미지 넣을 때 활용할 리스트
@@ -54,9 +52,10 @@ public class CategoryPage extends JDialog {
 	// 패널 3에 다음버튼 remove
 	List<JButton> listNext = new ArrayList<JButton>();
 	int o = 0;
+	LoginUserInfo user;
 
 	public CategoryPage(String category) {
-
+		setModal(true);
 		int count = 0;
 		int pnlCount = flowerList.size() / 6; // 패널의 갯수
 		int addPnl = flowerList.size() % 6; // 추가 패널 생성할지 말지
@@ -205,22 +204,30 @@ public class CategoryPage extends JDialog {
 			o++;
 		}
 		flowerList = flowerdao.selectAllWithList();
-		
-		// 장바구니 버튼 눌렀을때
+
+		// 상품과 수량까지 선택하고 장바구니 버튼 눌렀을때
 		// order_detail 테이블에 insert
 		btnInCart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < listComboBox.size(); i++) {
+				System.out.println(user.getID());
+				List<LoginUserInfo> list = new ArrayList<LoginUserInfo>();
+				list.add(user);
+				if (list.get(0).getID() != null) {
+					for (int i = 0; i < listComboBox.size(); i++) {
 
-					if (listComboBox.get(i).getSelectedIndex() != 0) {
-						flowerList.get(i).getNo();
+						if (listComboBox.get(i).getSelectedIndex() != 0) {
+							flowerList.get(i).getNo();
 
-						orderDetailDAO.insert(flowerList.get(i).getNo(), listComboBox.get(i).getSelectedIndex());
-						// i는 체크박스가 풀려있는거
-					} else {
-						// 체크박스가 false 인것
+							orderDetailDAO.insert(flowerList.get(i).getNo(), listComboBox.get(i).getSelectedIndex());
+							// i는 체크박스가 풀려있는거
+						} else {
+							// 체크박스가 false 인것
+						}
 					}
+
+				} else {
+					JOptionPane.showMessageDialog(null, "로그인하고 이용해주세요.");
 				}
 			}
 		});

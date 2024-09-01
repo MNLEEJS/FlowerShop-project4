@@ -31,13 +31,15 @@ public class Main extends JFrame {
 	FlowerDAO flowerdao = new FlowerDAO();
 	List<String> listCategory = flowerdao.selectCategory();
 	List<Flower> listFlower = flowerdao.selectAllWithList();
-	List<JButton> listbtton = new ArrayList<JButton>();
+	List<JButton> listbutton = new ArrayList<JButton>();
+	
 	FontL f = new FontL();
 	public JPanel pnl3;
 	public JPanel pnl2;
 	public JPanel pnl1;
 	private JTextField txtID;
 	private JTextField txtPW;
+
 
 	public Main() {
 		super("돼지 꽃다발 화원");
@@ -70,7 +72,7 @@ public class Main extends JFrame {
 				y += 50;
 			}
 			JButton btnCategory = j.버튼만들기(category, f.font4, 10, y, 100, 50, pnl2);
-			listbtton.add(btnCategory);
+			listbutton.add(btnCategory);
 			y += 70;
 
 			if (i == 6) {
@@ -80,15 +82,16 @@ public class Main extends JFrame {
 //		======================================
 		// 카테고리버튼 액션주기
 		// 나겸이 완성하면 스트링으로 넘겨주기
-		for (int a = 0; a < listbtton.size(); a++) {
+		for (int a = 0; a < listbutton.size(); a++) {
 			int z = a;
 
 			// 각 카테고리 별 버튼을 누르면 해당 카테고리 화면(다이얼로그창)이 뜸
-			listbtton.get(a).addActionListener(new ActionListener() {
+			listbutton.get(a).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					String catego = listbtton.get(z).getText();
+					String catego = listbutton.get(z).getText();
 					CategoryPage CP = new CategoryPage(catego);
+					CP.user = user;
 					CP.setVisible(true);
 				}
 			});
@@ -114,7 +117,7 @@ public class Main extends JFrame {
 
 				user.setID(txtID.getText());
 				user.setPW(txtPW.getText());
-
+				
 				// 일반회원 조회
 				int countID = 0;
 				int countPW = 0;
