@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 import org.omg.PortableServer.IdAssignmentPolicyOperations;
 
-public class CategoryPage extends JFrame {
+public class CategoryPage extends JDialog {
 	makingJ j = new makingJ();
 	FontL f = new FontL();
 	FlowerDAO flowerDAO = new FlowerDAO();
@@ -55,7 +55,7 @@ public class CategoryPage extends JFrame {
 	List<JButton> listNext = new ArrayList<JButton>();
 	int o = 0;
 
-	public CategoryPage() {
+	public CategoryPage(String category) {
 
 		int count = 0;
 		int pnlCount = flowerList.size() / 6; // 패널의 갯수
@@ -63,7 +63,7 @@ public class CategoryPage extends JFrame {
 
 		JPanel pnl = new JPanel(); // 카테고리 장바구니추가 메인으로가기 담는 패널
 
-		JLabel lblCategory = j.라벨만들기("카테고리", f.font3, 20, 20, 150, 50, pnl);
+		JLabel lblCategory = j.라벨만들기(category, f.font3, 20, 20, 150, 50, pnl);
 
 		JButton btnInCart = j.버튼만들기("장바구니 추가", f.font4, 400, 20, 180, 50, pnl);
 		JButton btnGoMain = j.버튼만들기("메인으로 가기", f.font4, 600, 20, 180, 50, pnl);
@@ -282,9 +282,5 @@ public class CategoryPage extends JFrame {
 
 		add(pnl);
 		setSize(new Dimension(800, 750));
-	}
-
-	public static void main(String[] args) {
-		new CategoryPage().setVisible(true);
 	}
 }

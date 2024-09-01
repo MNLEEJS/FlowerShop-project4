@@ -19,7 +19,7 @@ import javax.swing.Timer;
 public class Main extends JFrame {
 	// 로그인한 유저의 아이디 비밀번호
 	LoginUserInfo user = new LoginUserInfo();
-	
+
 	makingJ j = new makingJ();
 	memberJion mj = new memberJion();
 	memberModify mM = new memberModify();
@@ -64,16 +64,16 @@ public class Main extends JFrame {
 
 			if (category.equals(listCategory.get(i))) {
 
-			} 
-			if(i == 0) {
+			}
+			if (i == 0) {
 				JLabel CategoryLabel = j.라벨만들기("카테고리", f.font5, 30, y, 100, 50, pnl2);
 				y += 50;
 			}
 			JButton btnCategory = j.버튼만들기(category, f.font4, 10, y, 100, 50, pnl2);
 			listbtton.add(btnCategory);
 			y += 70;
-			
-			if(i == 6) {
+
+			if (i == 6) {
 				break;
 			}
 		}
@@ -81,11 +81,15 @@ public class Main extends JFrame {
 		// 카테고리버튼 액션주기
 		// 나겸이 완성하면 스트링으로 넘겨주기
 		for (int a = 0; a < listbtton.size(); a++) {
-//			listbtton.get(a).getText(); // 각 버튼의 텍스트 확인용
+			int z = a;
+
+			// 각 카테고리 별 버튼을 누르면 해당 카테고리 화면(다이얼로그창)이 뜸
 			listbtton.get(a).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					String catego = listbtton.get(z).getText();
+					CategoryPage CP = new CategoryPage(catego);
+					CP.setVisible(true);
 				}
 			});
 		}
@@ -107,13 +111,10 @@ public class Main extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
+
 				user.setID(txtID.getText());
 				user.setPW(txtPW.getText());
-				
-				
-				
+
 				// 일반회원 조회
 				int countID = 0;
 				int countPW = 0;
@@ -147,8 +148,7 @@ public class Main extends JFrame {
 				}
 				if (king == 0) { // 관리자 로그인 실패시 일반회원 정보 조회
 					if (countID > 0 && countPW > 0) {
-						
-						
+
 						pnl1.setVisible(false);
 						txtID.setText("");
 						txtPW.setText("");
