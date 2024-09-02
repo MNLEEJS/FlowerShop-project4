@@ -28,7 +28,7 @@ import javafx.scene.control.ComboBox;
 // 구매자를 위한 주문 구성의 선택과 취소창
 
 public class OrderInfoGui extends JFrame {
-	 String customerId;
+	String customerId;
 	makingJ j = new makingJ();
 	FontL f = new FontL();
 	JCheckBox c = new JCheckBox();
@@ -97,21 +97,21 @@ public class OrderInfoGui extends JFrame {
 		}
 
 //--------------- 전체 틀(버튼, 레이블, 콤보 박스)을 반복 생성 for문 -----------------------------------
-
+		System.out.println(orderNoList.size());
 		for (int i = 0; i < orderNoList.size(); i++) {
 
 			final int index = i;
 
 			// 이미지 찾아오기
-//			String code = Idao.findByNo(list.get(i).getImage_no()); // 주석해제 필수!
-//			ImageIcon icon = IFI.ImageiconCreate(code);// 주석해제 필수!
+			String code = Idao.findByNo(flowerDBlist.get(i).getImage_no()); // 주석해제 필수!
+			ImageIcon icon = IFI.ImageiconCreate(code);// 주석해제 필수!
 
 			
 			// 체크박스, 이미지 버튼 생성
 			checkboxList.add(j.체크박스만들기(10, y + 20, 50, 50, pnl));
 
 			imgButtonList.add(j.버튼만들기("이미지", f.font5, 60, y, 100, 100, pnl));
-//			imagebtn.setIcon(icon);// 주석해제 필수!
+			imgButtonList.get(i).setIcon(icon);
 
 			// 상품 상세정보가 나오는 이미지 버튼
 			imgButtonList.get(i).addActionListener(new ActionListener() {

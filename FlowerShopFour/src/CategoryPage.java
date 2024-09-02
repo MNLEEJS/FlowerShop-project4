@@ -256,10 +256,12 @@ public class CategoryPage extends JDialog {
 
 							int flowerOrderNo = orderDetailDAO.insert(flowerListWhere.get(i).getNo(),
 									listComboBox.get(i).getSelectedIndex());
-
+							
 							// userOrder_info(회원주문정보) 테이블에 insert
 							int orderNo = userOrderInfo.insert(list.get(0).getNo());
-
+							System.out.println(orderNo);
+							
+							System.out.println(flowerOrderNo);
 							// order_info(주문정보) 테이블에 insert
 							orderInfoDAO.insert(orderNo, flowerOrderNo, 0);
 
