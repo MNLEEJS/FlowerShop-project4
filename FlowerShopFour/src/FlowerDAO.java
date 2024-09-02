@@ -60,31 +60,6 @@ public class FlowerDAO {
 	Flower flower;
 	ImageDAO dao = new ImageDAO();
 
-	// 조회 (select)
-	// flower 테이블의 전체 컬럼 조회
-//	public Flower selectAll() {
-//		String sql = "select * from flower";
-//
-//		Connection conn = null;
-//		Statement stmt = null;
-//		ResultSet rs = null;
-//
-//		try {
-//			conn = DBUtil.getConnection("project3");
-//			stmt = conn.createStatement();
-//			rs = stmt.executeQuery(sql);
-//
-//			while (rs.next()) {
-//				Flower flower = flowerMapper.resultMapping(rs);
-//			}
-//			return flower;
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-
 //  작성자 - 이진석 
 // 사용할 거 따로 만들어 놓음
 	// 수량이 3개 이하로 남은 꽃다발만 출력

@@ -121,6 +121,30 @@ public class OrderDetailDAO {
 		return null;
 	}
 
+	public List<Integer> selectCount() {
+		String sql = "select count from order_detail";
+
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			List<Integer> list = new ArrayList<Integer>();
+
+			while (rs.next()) {
+				list.add(rs.getInt("count"));
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	// 행 추가 (insert)
 	// flower 테이블의 각 컬럼에 값을 insert해주는 메소드
 	// insert가 정상적으로 되면 return 1
@@ -234,42 +258,11 @@ public class OrderDetailDAO {
 		return -1;
 	}
 
-//	public List<Integer> selectOrderDetailbyMemberNo(String id) {
-//		String sql = "select od.flower_no, od.count, od.no from order_detail as od inner join\r\n" + "(select * from order_info inner join \r\n"
-//				+ "(select membership.no, membership.name, membership.id, user_no from userorder_info \r\n"
-//				+ "inner join (select no, name, id from membership where id = ?) as membership on user_no = membership.no) as memberInfo\r\n"
-//				+ "   on memberInfo.user_no = order_no) as memberOrderInfo on od.no = memberOrderInfo.flowerorder_no;";
-//
-//		Connection conn = null;
-//		PreparedStatement stmt = null;
-//		ResultSet rs = null;
-//
-//		try {
-//			conn = DBUtil.getConnection("project3");
-//			stmt = conn.prepareStatement(sql);
-//			stmt.setString(1, id);
-//			rs = stmt.executeQuery();
-//
-//			List<Integer> list = new ArrayList<>();
-//			while (rs.next()) {
-//				int num = rs.getInt(1);
-//				list.add(num);
-//			}
-//			return list;
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			DBUtil.closeAll(rs, stmt, conn);
-//		}
-//		return null;
-//	}
-
 	public List<OrderDetail> selectOrderDetailbyMemberNo(String id) {
-		String sql = "select od.flower_no, od.count, od.no from order_detail as od inner join  (select * from order_info inner join \r\n" + 
-				"				 (select userorder_info.no, membership.name, membership.id, user_no from userorder_info \r\n" + 
-				"				 inner join (select no, name, id from membership where id = ?) as membership on user_no = membership.no) as memberInfo\r\n" + 
-				"				  on memberInfo.no = order_no) as memberOrderInfo on od.no = memberOrderInfo.flowerorder_no;";
+		String sql = "select od.flower_no, od.count, od.no from order_detail as od inner join  (select * from order_info inner join \r\n"
+				+ "				 (select userorder_info.no, membership.name, membership.id, user_no from userorder_info \r\n"
+				+ "				 inner join (select no, name, id from membership where id = ?) as membership on user_no = membership.no) as memberInfo\r\n"
+				+ "				  on memberInfo.no = order_no) as memberOrderInfo on od.no = memberOrderInfo.flowerorder_no;";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;

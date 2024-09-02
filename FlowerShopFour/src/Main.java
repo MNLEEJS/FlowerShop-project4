@@ -52,10 +52,6 @@ public class Main extends JFrame {
 		Maingo();
 		Maingo2();
 
-//		if(deleteCount > 0 ) {
-//			new Main().setVisible(true);
-//			dispose();
-//		}
 		setSize(new Dimension(600, 500));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -196,8 +192,8 @@ public class Main extends JFrame {
 		// 메인화면
 
 		JLabel lbl1 = j.라벨만들기("돼지 꽃집 메인화면", f.font2, 0, 10, 600, 100, pnl3);
-		JLabel lblWelcome = j.라벨만들기("회원님 반갑습니다.(회원번호)", f.font3, 30, 40, 600, 100, pnl3);
-		JButton btnJang = j.버튼만들기("장바구니", f.font3, 30, 150, 200, 130, pnl3);
+//		JLabel lblWelcome = j.라벨만들기("회원님 반갑습니다.(회원번호)", f.font3, 30, 40, 600, 100, pnl3);
+		JButton btnJang = j.버튼만들기("장바구니", f.font4, 30, 150, 200, 130, pnl3);
 		btnJang.addActionListener(new ActionListener() {
 
 			@Override
@@ -206,7 +202,7 @@ public class Main extends JFrame {
 				orderInfoGui.setVisible(true);
 			}
 		});
-		JButton btnModify = j.버튼만들기("회원정보 수정", f.font3, 250, 150, 200, 130, pnl3);
+		JButton btnModify = j.버튼만들기("회원정보 수정", f.font4, 250, 150, 200, 130, pnl3);
 		btnModify.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -214,7 +210,7 @@ public class Main extends JFrame {
 				mM.setVisible(true);
 			}
 		});
-		JButton btnLogOut = j.버튼만들기("회원 탈퇴", f.font3, 30, 300, 200, 100, pnl3);
+		JButton btnLogOut = j.버튼만들기("회원 탈퇴", f.font4, 30, 300, 200, 100, pnl3);
 		btnLogOut.addActionListener(new ActionListener() {
 			private List<Membership> userList;
 			private List<UserOrder> userorderInfoList;
@@ -298,7 +294,7 @@ public class Main extends JFrame {
 				}
 			}
 		});
-		JButton btnOut = j.버튼만들기("로그아웃", f.font3, 250, 300, 200, 100, pnl3);
+		JButton btnOut = j.버튼만들기("로그아웃", f.font4, 250, 300, 200, 100, pnl3);
 		btnOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

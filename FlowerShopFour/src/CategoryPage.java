@@ -54,7 +54,9 @@ public class CategoryPage extends JDialog {
 	List<Flower> flowerListWhere;
 	// Membership 테이블 정보를 담는 리스트
 	List<Membership> listMembership;
+	// Order_detail 테이블 정보를 담는 리스트
 	List<OrderDetail> listOrderDetail;
+	// userorder_info 테이블 정보를 담는 리스트
 	List<UserOrder> listUserOrder;
 	LoginUserInfo user;
 	int o = 0;

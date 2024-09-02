@@ -27,7 +27,7 @@ public class ManagerSellingCheck extends JDialog {
 	// 모든 유저의 조회
 
 	OrderInfoDAO OIDAO = new OrderInfoDAO();
-	
+
 	// 주문번호 ,,, 꽃다발 이름 ,, 수량 ,, 가격 ,,,
 	OrderDetailDAO ODDAO = new OrderDetailDAO();
 	// 꽃다발의 이름, 가격을 찾기위해
@@ -42,32 +42,35 @@ public class ManagerSellingCheck extends JDialog {
 
 	public ManagerSellingCheck() {
 		setModal(true);
-		try {
 			orderInfoList = OIDAO.selectSellingCheck();
 			// 주문 상세 내역 테이블 조회해서 저장 하는 리스트 == 꽃다발 번호 ,, 꽃다발 주문 수량을 알수 있음
 			List<OrderDetail> orderDetaiilList = new ArrayList<>();
+			
 			for (int i = 0; i < orderInfoList.size(); i++) {
-				List<OrderDetail> list = ODDAO.selectOrderDetailNo(orderInfoList.get(i).getOrderNo());
+				List<OrderDetail> list = ODDAO.selectOrderDetailNo(orderInfoList.get(i).getFlowerOrderNo());
 				orderDetaiilList.addAll(list);
 			}
-			MainButton();
+
+
 			int a = orderInfoList.size() / 6;
 			int b = orderInfoList.size() % 6;
 			if (a != 0) {
 				a = orderInfoList.size() % 6;
 				b = 0;
 			}
-
+			
 			패널돌리기(orderDetaiilList, a);
 			if (b > 0) {
 				패널돌리기(orderDetaiilList, b);
 			}
-
-			for (int i = 0; i < pnlList.size(); i++) {
-				if (i == 0) {
-					pnlList.get(i).setVisible(true);
-				} else {
-					pnlList.get(i).setVisible(false);
+			MainButton();
+			if (pnlList.size() != 0) {
+				for (int i = 0; i < pnlList.size(); i++) {
+					if (i == 0) {
+						pnlList.get(i).setVisible(true);
+					} else {
+						pnlList.get(i).setVisible(false);
+					}
 				}
 			}
 
@@ -127,20 +130,20 @@ public class ManagerSellingCheck extends JDialog {
 					});
 				}
 			}
-			
-		} catch(Exception e) {
-			JPanel pnl = new JPanel();
-			pnl.setSize(new Dimension(800,500));
-			add(pnl);
-			JButton btn = j.버튼만들기("주문상품 없음", f.font2, 0, 0, 700, 500, pnl);
-		}
+
+//			JPanel pnl = new JPanel();
+//			pnl.setSize(new Dimension(100, 500));
+//			pnl.setBounds(800, 0, 900, 100);
+//			add(pnl);
+//			JButton btn = j.버튼만들기("주문상품 없음", f.font2, 0, 0, 100, 50, pnl);
+		
 		setSize(new Dimension(900, 600));
 		setLayout(null);
 	}
 
 	private void MainButton() {
 		JPanel pnl = new JPanel();
-		JButton btn = j.버튼만들기("판매 완료", f.font4, 0, 30, 100, 50, pnl);
+		JButton btn = j.버튼만들기("판매 완료", f.font4, 10, 30, 150, 50, pnl);
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -148,13 +151,14 @@ public class ManagerSellingCheck extends JDialog {
 
 					}
 					JOptionPane.showMessageDialog(null, "성공적으로 완료했습니다.");
+
 				} catch (Exception e123) {
 					JOptionPane.showMessageDialog(null, "체크된게 없습니다.");
 				}
 			}
 		});
 		pnl.setLayout(null);
-		pnl.setSize(new Dimension(900,100));
+		pnl.setSize(new Dimension(900, 100));
 		add(pnl);
 	}
 
@@ -165,16 +169,16 @@ public class ManagerSellingCheck extends JDialog {
 			int OrderNum = orderInfoList.get(i).getOrderNo();
 			JLabel lblOrderNum = j.라벨만들기("" + OrderNum, f.font4, 50, 50, 100, 50, pnl);
 
-			List<Flower> flowerList = FDAO.findBy("no", orderDetaiilList.get(i).getFlowerNo(), null, 0);
+			List<Flower> flowerList = new  ArrayList<Flower>();
+			flowerList.addAll(FDAO.findBy("no", orderDetaiilList.get(i).getFlowerNo(), null, 0));
 			String name = flowerList.get(0).getName();
 			JLabel lblName = j.라벨만들기(name, f.font4, 150, 50, 100, 50, pnl);
 
 			int count = orderDetaiilList.get(i).getCount();
 			JLabel lblCount = j.라벨만들기("" + count, f.font4, 250, 50, 100, 50, pnl);
 
-			int price = flowerList.get(i).getPrice();
+			int price = flowerList.get(0).getPrice();
 			JLabel lblPrice = j.라벨만들기("" + (count + price), f.font4, 350, 50, 100, 50, pnl);
-
 			JCheckBox che = j.체크박스만들기(500, 50, 30, 30, pnl);
 			cheList.add(che);
 			int z = i;
