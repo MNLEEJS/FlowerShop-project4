@@ -197,7 +197,7 @@ public class FlowerDAO {
 
 	// 조건(where절)에 따라 달라지는 조회 (select)
 	public List<Flower> findBy(String columnName, int no, String name, int image_no) {
-		String sql = "select no, category, name, count, price, image_no from flower where " + columnName + " = ?";
+		String sql = "select * from flower where " + columnName + " = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -208,16 +208,13 @@ public class FlowerDAO {
 			stmt = conn.prepareStatement(sql);
 
 			if (columnName.equals("no")) {
-				stmt.setString(1, columnName);
-				stmt.setInt(2, no);
+				stmt.setInt(1, no);
 
 			} else if (columnName.equals("name")) {
-				stmt.setString(1, columnName);
-				stmt.setString(2, name);
+				stmt.setString(1, name);
 
 			} else if (columnName.equals("image_no")) {
-				stmt.setString(1, columnName);
-				stmt.setInt(2, image_no);
+				stmt.setInt(1, image_no);
 
 			}
 

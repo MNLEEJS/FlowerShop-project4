@@ -59,9 +59,31 @@ public class OptionDetailDAO {
 	OptionDetailMapper optionDetailMapper = new OptionDetailMapper();
 	OptionDetail optionDetail;
 
+	public int selectLastPK() {
+		String sql = "SELECT LAST_INSERT_ID()";
 
-	
-	
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			int a = 0;
+			if (rs.next()) {
+				a = rs.getInt("LAST_INSERT_ID");
+			}
+			if (a > 0) {
+				return a;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
 	// 조회 (select)
 	// order_detail 테이블의 전체 컬럼 조회
 	public OptionDetail selectAll() {

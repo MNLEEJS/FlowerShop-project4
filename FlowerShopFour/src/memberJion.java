@@ -45,24 +45,28 @@ public class memberJion extends JDialog {
 				String address = listTxt.get(4).getText();
 				// 같은 ID를 가지고 있는 유저가 존재하는지 찾아야함;
 				
-				
-				if (id.length() < 5 && pw.length() < 5 && name.length() < 2 
-						&& phoneNumber.length() < 13
-						&& address.length() < 5) {
-					JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
-				} else if (!pw.equals(pw2)) {
-					JOptionPane.showMessageDialog(null, "비밀번호를 다시확인해주세요");
-				} else {
-					int a = info.insert(name, phoneNumber, id, pw, address);
-					// insert문 넣고 올바르게 들어가면
-					if (a > 0) {
-						JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
-						setVisible(false);
-					} else {
-						JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
-					}
-					
+				int a = info.insert(name, phoneNumber, id, pw, address);
+				if (a > 0) {
+					JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
+					setVisible(false);
 				}
+				
+//				if (id.length() < 5 && pw.length() < 5 && name.length() < 2 
+//						&& phoneNumber.length() < 13
+//						&& address.length() < 5) {
+//					JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
+//				} else if (!pw.equals(pw2)) {
+//					JOptionPane.showMessageDialog(null, "비밀번호를 다시확인해주세요");
+//				} else {
+//					// insert문 넣고 올바르게 들어가면
+//					if (a > 0) {
+//						JOptionPane.showMessageDialog(null, "회원 가입이 완료되었습니다.");
+//						setVisible(false);
+//					} else {
+//						JOptionPane.showMessageDialog(null, "올바른 값을 넣어주세요");
+//					}
+//					
+//				}
 
 			}
 		});

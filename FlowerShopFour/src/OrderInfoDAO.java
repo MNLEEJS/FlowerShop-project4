@@ -91,6 +91,33 @@ public class OrderInfoDAO {
 		return null;
 	}
 
+	
+	public List<OrderInfo> selectSellingCheck() {
+		String sql = "select * from order_info where sellingCheck = 1";
+
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			List<OrderInfo> list = new ArrayList<OrderInfo>();
+			while (rs.next()) {
+				OrderInfo orderInfo = orderInfoMapper.resultMapping(rs);
+				list.add(orderInfo);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return null;
+	}
+	
 	// 조회 (select)
 	// order_info 테이블의 전체 컬럼 조회
 	public OrderInfo selectAll() {
@@ -147,4 +174,41 @@ public class OrderInfoDAO {
 		}
 		return -1;
 	}
+	
+	
+	// 고객이 주문한 정보 테이블(orderDetail)의 sellingCheck update 메소드
+			public int updateSellingCheck(int no) {
+				String sql = "UPDATE order_info\r\n" + 
+						"SET sellingCheck = 1\r\n" + 
+						"WHERE flowerorder_no IN (\r\n" + 
+						"    SELECT no\r\n" + 
+						"    FROM (\r\n" + 
+						"        SELECT od.no\r\n" + 
+						"        FROM order_info as oi\r\n" + 
+						"        INNER JOIN order_detail as od\r\n" + 
+						"        ON oi.flowerorder_no = ?\r\n" + 
+						"    ) AS temp_table\r\n" + 
+						");";
+
+				Connection conn = null;
+				PreparedStatement stmt = null;
+
+				try {
+					conn = DBUtil.getConnection("project3");
+					stmt = conn.prepareStatement(sql);
+					stmt.setInt(1, no);
+
+					int result = stmt.executeUpdate();
+
+					if (result == 1) {
+						return result;
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+
+				} finally {
+					DBUtil.closeAll(null, stmt, conn);
+				}
+				return -1;
+			}
 }

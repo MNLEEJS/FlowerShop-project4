@@ -55,7 +55,7 @@ public class MemberDeleteDAO {
 
 // 멤버 리스트로 반환
 	public List<Membership> selectMembershipID(String ID) {
-		String sql = "SELECT * FROM membership where Id ? ";
+		String sql = "SELECT * FROM membership where Id  = ? ";
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -63,12 +63,13 @@ public class MemberDeleteDAO {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, ID);
+			rs = stmt.executeQuery();
 			List<Membership> list = new ArrayList<Membership>();
-			if (rs.next()) {
+			while (rs.next()) {
+
 				Membership membership = membershipMapper.resultMapping(rs);
 				list.add(membership);
 			}
-			rs = stmt.executeQuery();
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -157,6 +158,5 @@ public class MemberDeleteDAO {
 	}
 
 	// 회원 이름과 ID를 조회해서 주문번호를 가져옴
-
 
 }

@@ -13,128 +13,178 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 // 작업자 : 이나겸
 // 관리자 화면의 판매 확인 페이지 GUI 구현
-
+// 
 public class ManagerSellingCheck extends JDialog {
 	makingJ j = new makingJ();
-	FontL font = new FontL();
+	FontL f = new FontL();
 	// 유저전체의 번호를 조회 > 그 번호로 주문번호 전체 조회 > 주문번호로 총 가격 조회해서 매출 출력
 	MemberInfo MIF = new MemberInfo();
 	// 모든 유저의 조회
 
-	// 회원 주문 목록 테이블에서 회원 번호로 조회해서 주문번호 전체 출력받기
-	UserOrderInfo UOI = new UserOrderInfo();
-	// 리스트로 출력받을 리스트 선언
-	List<UserOrder> userOrderList = new ArrayList<UserOrder>();
-	// 주문 정보를 출력받기 위해 선언
 	OrderInfoDAO OIDAO = new OrderInfoDAO();
-	// 주문 정보를 출력받아 저장해놓을 리스트 선언
-	List<OrderInfo> orderInfoList = new ArrayList<OrderInfo>();
-	// 주문상품번호로 주문상세내역 테이블 전체 받기위한 클래스 선언
+	List<OrderInfo> orderInfoList = OIDAO.selectSellingCheck();
+	// 주문번호 ,,, 꽃다발 이름 ,, 수량 ,, 가격 ,,,
 	OrderDetailDAO ODDAO = new OrderDetailDAO();
-	// 주문 상세 내역의 리스트
-	List<OrderDetail> orderDetail = new ArrayList<OrderDetail>();
+	// 꽃다발의 이름, 가격을 찾기위해
+	FlowerDAO FDAO = new FlowerDAO();
+
+	List<JPanel> pnlList = new ArrayList<>();
+	List<JCheckBox> cheList = new ArrayList<>();
+
+	// 주문번호를 담을 리스트
+	List<Integer> orderList = new ArrayList<Integer>();
 
 	public ManagerSellingCheck() {
 		setModal(true);
-		// 회원번호로 주문한적이 있는 주문번호 다 출력받기
-		List<Membership> memberList = MIF.selectAll();
-		for (int i = 0; i < memberList.size(); i++) {
-			List<UserOrder> List = UOI.findByPk(memberList.get(i).getNo(), "user_no");
-			userOrderList.addAll(List);
+		try {
+			// 주문 상세 내역 테이블 조회해서 저장 하는 리스트 == 꽃다발 번호 ,, 꽃다발 주문 수량을 알수 있음
+			List<OrderDetail> orderDetaiilList = new ArrayList<>();
+			for (int i = 0; i < orderInfoList.size(); i++) {
+				List<OrderDetail> list = ODDAO.selectOrderDetailNo(orderInfoList.get(i).getOrderNo());
+				orderDetaiilList.addAll(list);
+			}
+			MainButton();
+			int a = orderInfoList.size() / 6;
+			int b = orderInfoList.size() % 6;
+			if (a != 0) {
+				a = orderInfoList.size() % 6;
+				b = 0;
+			}
+
+			패널돌리기(orderDetaiilList, a);
+			if (b > 0) {
+				패널돌리기(orderDetaiilList, b);
+			}
+
+			for (int i = 0; i < pnlList.size(); i++) {
+				if (i == 0) {
+					pnlList.get(i).setVisible(true);
+				} else {
+					pnlList.get(i).setVisible(false);
+				}
+			}
+
+			if (pnlList.size() > 1) {
+				JButton btnNEXT = j.버튼만들기("다음", f.font3, 50, 530, 100, 60, pnlList.get(0));
+				btnNEXT.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						pnlList.get(0).setVisible(false);
+						try {
+							pnlList.get(1).setVisible(true);
+						} catch (Exception e10) {
+							JOptionPane.showMessageDialog(null, "다음페이지는 없습니다.");
+							pnlList.get(0).setVisible(true);
+						}
+					}
+				});
+				if (pnlList.size() > 2) {
+					JButton btnNEXT1 = j.버튼만들기("다음", f.font3, 50, 530, 100, 60, pnlList.get(1));
+					btnNEXT1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							pnlList.get(1).setVisible(false);
+							try {
+								pnlList.get(2).setVisible(true);
+							} catch (Exception e3) {
+								JOptionPane.showMessageDialog(null, "다음페이지는 없습니다.");
+								pnlList.get(1).setVisible(true);
+							}
+						}
+					});
+					JButton btnBEFORE1 = j.버튼만들기("이전", f.font3, 180, 530, 100, 60, pnlList.get(1));
+					btnBEFORE1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							pnlList.get(1).setVisible(false);
+							pnlList.get(0).setVisible(true);
+						}
+					});
+				}
+				if (pnlList.size() > 3) {
+					JButton btnNEXT2 = j.버튼만들기("다음", f.font3, 50, 530, 100, 60, pnlList.get(2));
+					btnNEXT2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							pnlList.get(2).setVisible(false);
+							try {
+								pnlList.get(3).setVisible(true);
+							} catch (Exception e1) {
+								JOptionPane.showMessageDialog(null, "다음페이지는 없습니다.");
+								pnlList.get(2).setVisible(true);
+							}
+						}
+					});
+					JButton btnBEFORE2 = j.버튼만들기("이전", f.font3, 180, 530, 100, 60, pnlList.get(2));
+					btnBEFORE2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							pnlList.get(2).setVisible(false);
+							pnlList.get(1).setVisible(true);
+						}
+					});
+				}
+			}
+			
+		} catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "현재 주문 X");
 		}
-
-		// 주문번호로 조회해서 주문 정보 다 출력받아 저장하기
-		for (int i = 0; i < userOrderList.size(); i++) {
-			List<OrderInfo> List = OIDAO.selectOrderNo(userOrderList.get(i).getNo());
-			orderInfoList.addAll(List);
-		}
-
-		// 주문상세내역테이블 리스트에 전체 넣기
-		for (int i = 0; i < orderInfoList.size(); i++) {
-			List<OrderDetail> List = ODDAO.selectOrderDetailNo(orderInfoList.get(i).getFlowerOrderNo());
-			orderDetail.addAll(List);
-		}
-
-		// 위에꺼 이용해서 for문 돌려서 gui 완성하기
-
-		setSize(new Dimension(900, 500));
+		setSize(new Dimension(900, 600));
 		setLayout(null);
+	}
 
-// <관리자 화면의 판매 확인 페이지>------------------------------------------------------------------------------------------
+	private void MainButton() {
+		JButton btn = j.버튼만들기("판매 완료", f.font4, 700, 500, 100, 50, null);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					for (int i = 0; i < orderList.size(); i++) {
 
-		JPanel pnlBase2 = new JPanel(); // 판매 확인 페이지의 요소들이 다 들어가는 토대 패널
-		pnlBase2.setLayout(null);
-		pnlBase2.setSize(new Dimension(900, 500));
-		add(pnlBase2);
+					}
+					JOptionPane.showMessageDialog(null, "성공적으로 완료했습니다.");
+				} catch (Exception e123) {
+					JOptionPane.showMessageDialog(null, "체크된게 없습니다.");
+				}
+			}
+		});
+		add(btn);
+	}
 
-		// JLable 생성 메소드 호출
-		JLabel lblcategory = j.라벨만들기("카테고리", font.font3, 380, 15, 200, 40, pnlBase2);
+	private void 패널돌리기(List<OrderDetail> orderDetaiilList, int a) {
+		for (int i = 0; i < a; i++) {
+			JPanel pnl = new JPanel();
+			pnlList.add(pnl);
+			int OrderNum = orderInfoList.get(i).getOrderNo();
+			JLabel lblOrderNum = j.라벨만들기("" + OrderNum, f.font4, 50, 50, 100, 50, pnl);
 
-		// 일정한 간격을 두고 JLable 생성하기
-		int lblX = 30;
-		int lblY = 85;
-		int lblWidth = 300;
-		int lblHeight = 40;
-		int lblCount = 5;
+			List<Flower> flowerList = FDAO.findBy("no", orderDetaiilList.get(i).getFlowerNo(), null, 0);
+			String name = flowerList.get(0).getName();
+			JLabel lblName = j.라벨만들기(name, f.font4, 150, 50, 100, 50, pnl);
 
-		for (int i = 0; i < lblCount; i++) {
-			String lblName = "1000";
-			String lblName2 = "졸업식 꽃다발 안개꽃";
-			String lblName3 = "수량 : " + "1개";
-			String lblName4 = "가격 : " + "100,000 원";
-			String lblName5 = "판매 완료";
+			int count = orderDetaiilList.get(i).getCount();
+			JLabel lblCount = j.라벨만들기("" + count, f.font4, 250, 50, 100, 50, pnl);
 
-			// 회원 번호 레이블 (값을 가져와서 레이블의 텍스트 변경 예정)
-			JLabel lblMemberNo = j.라벨만들기(lblName, font.font4, lblX, lblY, lblWidth - 120, lblHeight, pnlBase2);
-			// 꽃다발 이름 레이블 (값을 가져와서 레이블의 텍스트 변경 예정)
-			JLabel lblFlowerName = j.라벨만들기(lblName2, font.font4, lblX + 80, lblY, lblWidth, lblHeight, pnlBase2);
-			// 수량 레이블 (값을 가져와서 레이블의 텍스트 변경 예정)
-			JLabel lblFlowerCount = j.라벨만들기(lblName3, font.font4, lblX + 320, lblY, lblWidth - 100, lblHeight,
-					pnlBase2);
-			// 가격 레이블 (값을 가져와서 레이블의 텍스트 변경 예정)
-			JLabel lblFlowerPrice = j.라벨만들기(lblName4, font.font4, lblX + 460, lblY, lblWidth, lblHeight, pnlBase2);
-			// 체크 박스 (체크 박스 선택하면 해당 체크 박스 비활성화)
-			JCheckBox checkBox = j.체크박스만들기(lblX + 690, lblY + 10, lblWidth - 280, lblHeight - 20, pnlBase2);
-			// 판매 완료 레이블
-			JLabel lblComplete = j.라벨만들기(lblName5, font.font4, lblX + 720, lblY, lblWidth - 120, lblHeight, pnlBase2);
-			lblY += 60;
+			int price = flowerList.get(i).getPrice();
+			JLabel lblPrice = j.라벨만들기("" + (count + price), f.font4, 350, 50, 100, 50, pnl);
 
-			// 체크 박스 선택했을때 해당 체크 박스 비활성화 (ItemListener)
-			checkBox.addItemListener(new ItemListener() {
+			JCheckBox che = j.체크박스만들기(500, 50, 30, 30, pnl);
+			cheList.add(che);
+			int z = i;
+			che.addItemListener(new ItemListener() {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					if (e.getStateChange() == ItemEvent.SELECTED) {
-						checkBox.setEnabled(false);
+						orderList.add(orderInfoList.get(z).getOrderNo());
+					} else {
+						orderList.remove(z);
 					}
 				}
 			});
+			JLabel lblSelling = j.라벨만들기("판매 완료", f.font4, 600, 50, 100, 50, pnl);
+			pnl.setSize(new Dimension(900, 500));
+			pnl.setLayout(null);
+			add(pnl);
 		}
-
-		JButton btnPre = j.버튼만들기("이전", font.font4, 30, 395, 80, 30, pnlBase2); // 이전 버튼
-		JButton btnNext = j.버튼만들기("다음", font.font4, 120, 395, 80, 30, pnlBase2); // 다음 버튼
-
-		JLabel lblTotalCount = j.라벨만들기("총 수량 : 10개", font.font4, 350, 385, 200, 40, pnlBase2); // 총 수량 표시 레이블
-		JLabel lblTotalPrice = j.라벨만들기("총 가격 : 100,000원", font.font4, 570, 385, 300, 40, pnlBase2); // 총 가격 표시 레이블
-
-		// 이전 버튼 눌렀을때 (ActionListener)
-		btnPre.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-
-		// 다음 버튼 눌렀을때 (ActionListener)
-		btnNext.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
 	}
 
 }

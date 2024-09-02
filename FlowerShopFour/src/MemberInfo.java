@@ -225,7 +225,7 @@ public class MemberInfo {
 
 	// 멤버 죽이기
 	public int deleteMembership(int no) {
-		String sql = "delete from membership where user_no = ?";
+		String sql = "delete from membership where no = ?";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;

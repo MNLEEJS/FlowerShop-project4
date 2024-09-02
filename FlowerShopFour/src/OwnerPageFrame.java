@@ -20,10 +20,9 @@ import javax.swing.JTextField;
 // 작업자 : 이아현
 
 // 관리자 페이지 
-public class OwnerPageFrame extends JFrame {
+public class OwnerPageFrame extends JDialog {
 	FontL f = new FontL();
 	makingJ j = new makingJ();
-	JCheckBox c = new JCheckBox();
 	// 이미지코드를 이미지 아이콘으로 바꿔주기 위한 클래스선언
 	ImageFileInsert IFI = new ImageFileInsert();
 	// 플라워 리스트 받아서 이미지 코드를 찾기위한 클래스
@@ -44,7 +43,7 @@ public class OwnerPageFrame extends JFrame {
 
 	// 관리자 페이지의 상단 라벨과 버튼 생성
 	public OwnerPageFrame() {
-//		setModal(true);
+		setModal(true);
 		JPanel pnl = new JPanel();
 		JLabel lbl1 = j.라벨만들기("관리자 페이지", f.font1, 10, 10, 200, 50, pnl);
 //		JLabel lbl2 = j.라벨만들기("카테고리 1", f.font1, 210, 10, 170, 50, pnl);
@@ -86,9 +85,7 @@ public class OwnerPageFrame extends JFrame {
 		setSize(new Dimension(700, 600));
 
 	}
-
-	public static void main(String[] args) {
-		new OwnerPageFrame().setVisible(true);
-
-	}
+//	public static void main(String[] args) {
+//		new OwnerPageFrame().setVisible(true);
+//	}
 }

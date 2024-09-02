@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.JOniException;
+
 //작성자 || 이진석
 public class Main extends JFrame {
 	// 로그인한 유저의 아이디 비밀번호
@@ -26,13 +28,12 @@ public class Main extends JFrame {
 	FlowerProduct FP = new FlowerProduct("");
 	ManagerWindow MW = new ManagerWindow();
 	MemberInfo Mif = new MemberInfo();
-	List<String> listID1 = Mif.IDseach();
-	List<String> listPW1 = Mif.PWseach();
 	FlowerDAO flowerdao = new FlowerDAO();
 	List<String> listCategory = flowerdao.selectCategory();
 	List<Flower> listFlower = flowerdao.selectAllWithList();
 	List<JButton> listbutton = new ArrayList<JButton>();
 
+	int deleteCount = 0;
 	FontL f = new FontL();
 	public JPanel pnl3;
 	public JPanel pnl2;
@@ -48,10 +49,15 @@ public class Main extends JFrame {
 	public Main() {
 		super("돼지 꽃다발 화원");
 		getContentPane().setLayout(null);
+
 		Main1();
 		Maingo();
 		Maingo2();
 
+//		if(deleteCount > 0 ) {
+//			new Main().setVisible(true);
+//			dispose();
+//		}
 		setSize(new Dimension(600, 500));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -119,6 +125,8 @@ public class Main extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				List<String> listID1 = Mif.IDseach();
+				List<String> listPW1 = Mif.PWseach();
 
 				user.setID(txtID.getText());
 				user.setPW(txtPW.getText());
@@ -192,6 +200,14 @@ public class Main extends JFrame {
 		JLabel lbl1 = j.라벨만들기("돼지 꽃집 메인화면", f.font2, 0, 10, 600, 100, pnl3);
 		JLabel lblWelcome = j.라벨만들기("회원님 반갑습니다.(회원번호)", f.font3, 30, 40, 600, 100, pnl3);
 		JButton btnJang = j.버튼만들기("장바구니", f.font3, 30, 150, 200, 130, pnl3);
+		btnJang.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				OrderInfoGui orderInfoGui = new OrderInfoGui(user.getID());
+				orderInfoGui.setVisible(true);
+			}
+		});
 		JButton btnModify = j.버튼만들기("회원정보 수정", f.font3, 250, 150, 200, 130, pnl3);
 		btnModify.addActionListener(new ActionListener() {
 			@Override
@@ -202,6 +218,11 @@ public class Main extends JFrame {
 		});
 		JButton btnLogOut = j.버튼만들기("회원 탈퇴", f.font3, 30, 300, 200, 100, pnl3);
 		btnLogOut.addActionListener(new ActionListener() {
+			private List<Membership> userList;
+			private List<UserOrder> userorderInfoList;
+			private List<OrderInfo> ordertInfoList;
+			private List<OrderDetail> orderDetailList;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -209,41 +230,73 @@ public class Main extends JFrame {
 				if (a.equals("네")) {
 					MDDAO.insert(user.getID()); // 삭제할 유저의 정보를 논리적 삭제 구현
 					// 유저의 정보 조회
-					List<Membership> userList = MDDAO.selectMembershipID(user.getID());
+					userList = MDDAO.selectMembershipID(user.getID());
 					// 유저오더인포 정보
-					List<UserOrder> userorderInfoList = UOI.findByPk(userList.get(0).getNo(), "user_NO");
+					if (userorderInfoList != null) {
+						userorderInfoList = UOI.findByPk(userList.get(0).getNo(), "user_NO");
+					}
 					// 시팔 몰라
-					List<OrderInfo> ordertInfoList = OIDAO.selectOrderNo(userorderInfoList.get(0).getUser_no());
+					if (ordertInfoList != null) {
+						ordertInfoList = OIDAO.selectOrderNo(userorderInfoList.get(0).getUser_no());
+					}
 					// 로그인한 유저로 정보를 조회
-					List<OrderDetail> orderDetailList = ODDAO
-							.selectOrderDetailNo(ordertInfoList.get(0).getFlowerOrderNo());
-
+					if (orderDetailList != null) {
+						orderDetailList = ODDAO.selectOrderDetailNo(ordertInfoList.get(0).getFlowerOrderNo());
+					}
 					// 1 . 주문정보 테이블 삭제 완료
-					MDDAO.deleteOrder_info(userorderInfoList.get(0).getNo());
+					if (userorderInfoList != null) {
+						MDDAO.deleteOrder_info(userorderInfoList.get(0).getNo());
+					}
 					// 2. 회원 주문 정보 테이블 삭제
-					MDDAO.deleteUserOrder_info(userList.get(0).getNo());
+					if (userList != null) {
+						MDDAO.deleteUserOrder_info(userList.get(0).getNo());
+					}
 					// 3. 주문상세 내역 테이블 삭제
 					// 얘는 PK기준으로 삭제라서 여러PK가 있기에 FOR문 돌림
-					for (int i = 0; i < ordertInfoList.size(); i++) {
-						MDDAO.deleteOrder_detail(ordertInfoList.get(i).getOrderNo());
+					if (ordertInfoList != null) {
+						for (int i = 0; i < ordertInfoList.size(); i++) {
+							MDDAO.deleteOrder_detail(ordertInfoList.get(i).getOrderNo());
+						}
 					}
 					// 멤버쉽 테이블에서도 마무으리 삭제
-					Mif.deleteMembership(userList.get(0).getNo());
-					for (int j = 0; j < orderDetailList.size(); j++) {
-						orderDetailList.remove(j);
+					int userDelete = 0;
+					try {
+						userDelete = Mif.deleteMembership(userList.get(0).getNo());
+					} catch (Exception e8) {
+						e8.printStackTrace();
 					}
-					for (int i = 0; i < ordertInfoList.size(); i++) {
-						ordertInfoList.remove(i);
+//					if (userDelete > 0) {
+//						JOptionPane.showMessageDialog(null, "성공적으로 탈퇴 되었습니다.");
+//					} else {
+//						JOptionPane.showMessageDialog(null, "탈퇴불가.");
+//					}
+					if (orderDetailList != null) {
+						for (int j = 0; j < orderDetailList.size(); j++) {
+							orderDetailList.remove(j);
+						}
 					}
-					for (int j = 0; j < userorderInfoList.size(); j++) {
-						userorderInfoList.remove(j);
+					if (ordertInfoList != null) {
+						for (int i = 0; i < ordertInfoList.size(); i++) {
+							ordertInfoList.remove(i);
+						}
 					}
-					for (int i = 0; i < userList.size(); i++) {
-						userList.remove(i);
+					if (userorderInfoList != null) {
+						for (int j = 0; j < userorderInfoList.size(); j++) {
+							userorderInfoList.remove(j);
+						}
 					}
-					JOptionPane.showMessageDialog(null, "탈퇴완료 되었습니다.");
-				} else {
-					JOptionPane.showMessageDialog(null, "탈퇴되지 않았습니다.");
+					if (userList != null) {
+						for (int i = 0; i < userList.size(); i++) {
+							userList.remove(i);
+						}
+					}
+					if (userDelete > 0) {
+						pnl3.setVisible(false);
+						pnl1.setVisible(true);
+						JOptionPane.showMessageDialog(null, "성공적으로 탈퇴 되었습니다.");
+					} else {
+						JOptionPane.showMessageDialog(null, "탈퇴불가.");
+					}
 				}
 			}
 		});

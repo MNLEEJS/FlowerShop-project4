@@ -21,16 +21,15 @@ import javax.swing.SwingConstants;
 public class ManagerWindow extends JDialog {
 	OwnerPageFrame OPF = new OwnerPageFrame();
 	AddColumn AC = new AddColumn();
-	ManagerSellingCheck MSC = new ManagerSellingCheck();
+
 	makingJ j = new makingJ();
 	FontL font = new FontL();
 
 	public ManagerWindow() {
+		ManagerSellingCheck MSC = new ManagerSellingCheck();
 		setModal(true);
 		setSize(new Dimension(500, 500));
 		setLayout(null);
-		
-		
 
 // <관리자 화면의 메인 페이지>---------------------------------------------------------------------------------------------------
 
