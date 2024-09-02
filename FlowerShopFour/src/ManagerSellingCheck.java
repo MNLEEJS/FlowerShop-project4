@@ -27,7 +27,7 @@ public class ManagerSellingCheck extends JDialog {
 	// 모든 유저의 조회
 
 	OrderInfoDAO OIDAO = new OrderInfoDAO();
-	List<OrderInfo> orderInfoList = OIDAO.selectSellingCheck();
+	
 	// 주문번호 ,,, 꽃다발 이름 ,, 수량 ,, 가격 ,,,
 	OrderDetailDAO ODDAO = new OrderDetailDAO();
 	// 꽃다발의 이름, 가격을 찾기위해
@@ -38,10 +38,12 @@ public class ManagerSellingCheck extends JDialog {
 
 	// 주문번호를 담을 리스트
 	List<Integer> orderList = new ArrayList<Integer>();
+	List<OrderInfo> orderInfoList = new ArrayList<>();
 
 	public ManagerSellingCheck() {
 		setModal(true);
 		try {
+			orderInfoList = OIDAO.selectSellingCheck();
 			// 주문 상세 내역 테이블 조회해서 저장 하는 리스트 == 꽃다발 번호 ,, 꽃다발 주문 수량을 알수 있음
 			List<OrderDetail> orderDetaiilList = new ArrayList<>();
 			for (int i = 0; i < orderInfoList.size(); i++) {
@@ -127,14 +129,18 @@ public class ManagerSellingCheck extends JDialog {
 			}
 			
 		} catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "현재 주문 X");
+			JPanel pnl = new JPanel();
+			pnl.setSize(new Dimension(800,500));
+			add(pnl);
+			JButton btn = j.버튼만들기("주문상품 없음", f.font2, 0, 0, 700, 500, pnl);
 		}
 		setSize(new Dimension(900, 600));
 		setLayout(null);
 	}
 
 	private void MainButton() {
-		JButton btn = j.버튼만들기("판매 완료", f.font4, 700, 500, 100, 50, null);
+		JPanel pnl = new JPanel();
+		JButton btn = j.버튼만들기("판매 완료", f.font4, 0, 30, 100, 50, pnl);
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -147,7 +153,9 @@ public class ManagerSellingCheck extends JDialog {
 				}
 			}
 		});
-		add(btn);
+		pnl.setLayout(null);
+		pnl.setSize(new Dimension(900,100));
+		add(pnl);
 	}
 
 	private void 패널돌리기(List<OrderDetail> orderDetaiilList, int a) {
