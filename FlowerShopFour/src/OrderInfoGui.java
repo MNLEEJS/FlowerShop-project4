@@ -25,17 +25,6 @@ import javafx.scene.control.ComboBox;
 
 //작성자 : 이아현
 
-
-// 1. 화면에 주문 내역 6개 이상 보이도록 만들기
-// 2. 회원 정보로 insert된 값을 update 만들기
-// 3. 결제 후 delete 및 update 수정
-// 4. 결제창 다이얼로그 만들기
-// 5. 디자인, 이미지 넣기
-// 6. ppt 꽃다발 이미지 픽셀 따오기
-
-
-
-
 // 구매자를 위한 주문 구성의 선택과 취소창
 
 public class OrderInfoGui extends JFrame {

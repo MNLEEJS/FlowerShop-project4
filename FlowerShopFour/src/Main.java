@@ -15,8 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.JOniException;
-
 //작성자 || 이진석
 public class Main extends JFrame {
 	// 로그인한 유저의 아이디 비밀번호

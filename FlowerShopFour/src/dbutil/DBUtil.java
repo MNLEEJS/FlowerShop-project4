@@ -16,7 +16,8 @@ public class DBUtil {
 	private static String password;
 
 	static {
-		LoadProperties("project.properties");
+//		LoadProperties("project.properties");
+		LoadProperties("localDB.properties");
 		LoadDriver();
 	}
 
