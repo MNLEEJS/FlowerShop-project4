@@ -17,8 +17,12 @@ public class ProductExplain extends JDialog{
    ImageFileInsert image = new ImageFileInsert();
    ImageDAO Idao = new ImageDAO();
    List<Flower> list = new ArrayList<Flower>();
-   public void flowerGet () {
-      list.addAll((dao.selectAllWithList()));
+   List<Flower> flowerList = new ArrayList<Flower>();
+   
+   public void flowerGet (String category) {
+	   flowerList.addAll(dao.selectWhere(category));
+//	   flowerList.addAll(c)
+//      list.addAll((dao.selectAllWithList()));
    }
    
    // flower 테이블의 번호의 값을 받아서 조회해서 flower의 정보를 받아
@@ -49,25 +53,25 @@ public class ProductExplain extends JDialog{
    
    
    
-   public ProductExplain(int imageNum) {
+   public ProductExplain(String category , int imageNum) {
       setModal(true);
-      flowerGet();
+      flowerGet(category);
       // 이미지 조회
-      String code = Idao.findByNo(list.get(imageNum).getImage_no());
+      String code = Idao.findByNo(flowerList.get(imageNum).getImage_no());
       ImageIcon icon = image.ImageiconCreate(code);
       
       JPanel pnl = new JPanel();
       JLabel lblcategory = j.라벨만들기("카테고리명 : ", f.font4, 20, 10, 130, 30, pnl);
       
-      String cateGory = list.get(imageNum).getCategory();
+      String cateGory = flowerList.get(imageNum).getCategory();
       JLabel lblcategoryname = j.라벨만들기(cateGory, f.font4, 150, 10, 250, 30, pnl);
       
       JLabel lblprice = j.라벨만들기("가격 : ", f.font4, 20, 50, 800, 30, pnl);
-      int price = list.get(imageNum).getPrice();
+      int price = flowerList.get(imageNum).getPrice();
       String priceString = String.valueOf(price);
       JLabel lblpricere = j.라벨만들기((priceString + " 원"), f.font4, 90, 50, 150, 30, pnl);
       
-      String product = list.get(imageNum).getName();
+      String product = flowerList.get(imageNum).getName();
       JLabel lblname = j.라벨만들기(product, f.font3, 200, 40, 250, 50, pnl);
       
       
@@ -83,9 +87,6 @@ public class ProductExplain extends JDialog{
       add(pnl);
       setLayout(null);
       setSize(new Dimension(500,500));
-   }
-   public static void main(String[] args) {
-      new ProductExplain(1).setVisible(true);
    }
    
 }
