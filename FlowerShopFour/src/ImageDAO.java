@@ -195,4 +195,45 @@ public class ImageDAO {
 		}
 		return -1;
 	}
+	
+	// 방금 추가
+	// 이미지를 불러오는 selete문
+	//orderDetail을 이용하여 Flower_pic의 내용을 불러오는 select문
+	public String selectOrderImage(int no) {
+		String sql = "SELECT fp.no, fp.code \r\n" + 
+				"FROM flower_pic AS fp\r\n" + 
+				"INNER JOIN (\r\n" + 
+				"    SELECT fl.no, fl.image_no\r\n" + 
+				"    FROM order_detail AS od\r\n" + 
+				"    INNER JOIN flower AS fl ON od.flower_no = fl.no \r\n" + 
+				"    WHERE od.no = ? \r\n" + 
+				") AS flowerOrder ON flowerOrder.image_no = fp.no;\r\n";
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection("project3");
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, no);
+			List<Image> list = new ArrayList<>();
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Image image = imageMapper.resultMapping(rs);
+				list.add(image);
+			}
+			return list.get(0).getCode();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(rs, stmt, conn);
+		}
+		return null;
+	}
+	
+	
 }

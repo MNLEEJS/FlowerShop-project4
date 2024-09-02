@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -13,7 +14,6 @@ import javax.swing.JOptionPane;
 // 이진석 메인화면 작성
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 
 //작성자 || 이진석
 public class Main extends JFrame {
@@ -228,22 +228,32 @@ public class Main extends JFrame {
 					// 유저오더인포 정보
 					if (userorderInfoList != null) {
 						userorderInfoList = UOI.findByPk(userList.get(0).getNo(), "user_NO");
+					}else {
+
 					}
 					// 시팔 몰라
 					if (ordertInfoList != null) {
 						ordertInfoList = OIDAO.selectOrderNo(userorderInfoList.get(0).getUser_no());
+					}else {
+
 					}
 					// 로그인한 유저로 정보를 조회
 					if (orderDetailList != null) {
 						orderDetailList = ODDAO.selectOrderDetailNo(ordertInfoList.get(0).getFlowerOrderNo());
+					}else {
+
 					}
 					// 1 . 주문정보 테이블 삭제 완료
 					if (userorderInfoList != null) {
 						MDDAO.deleteOrder_info(userorderInfoList.get(0).getNo());
+					}else {
+
 					}
 					// 2. 회원 주문 정보 테이블 삭제
 					if (userList != null) {
 						MDDAO.deleteUserOrder_info(userList.get(0).getNo());
+					} else {
+
 					}
 					// 3. 주문상세 내역 테이블 삭제
 					// 얘는 PK기준으로 삭제라서 여러PK가 있기에 FOR문 돌림
@@ -251,10 +261,13 @@ public class Main extends JFrame {
 						for (int i = 0; i < ordertInfoList.size(); i++) {
 							MDDAO.deleteOrder_detail(ordertInfoList.get(i).getOrderNo());
 						}
+					}else {
+
 					}
 					// 멤버쉽 테이블에서도 마무으리 삭제
 					int userDelete = 0;
 					try {
+						System.out.println(userList.get(0).getNo());
 						userDelete = Mif.deleteMembership(userList.get(0).getNo());
 					} catch (Exception e8) {
 						e8.printStackTrace();
@@ -268,21 +281,29 @@ public class Main extends JFrame {
 						for (int j = 0; j < orderDetailList.size(); j++) {
 							orderDetailList.remove(j);
 						}
+					}else {
+
 					}
 					if (ordertInfoList != null) {
 						for (int i = 0; i < ordertInfoList.size(); i++) {
 							ordertInfoList.remove(i);
 						}
+					}else {
+
 					}
 					if (userorderInfoList != null) {
 						for (int j = 0; j < userorderInfoList.size(); j++) {
 							userorderInfoList.remove(j);
 						}
+					}else {
+
 					}
 					if (userList != null) {
 						for (int i = 0; i < userList.size(); i++) {
 							userList.remove(i);
 						}
+					}else {
+
 					}
 					if (userDelete > 0) {
 						pnl3.setVisible(false);

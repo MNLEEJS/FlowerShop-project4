@@ -20,7 +20,7 @@ public class ProductExplain extends JDialog{
    List<Flower> flowerList = new ArrayList<Flower>();
    
    public void flowerGet (String category) {
-	   flowerList.addAll(dao.selectWhere(category));
+	   flowerList = (dao.selectWhere(category));
 //	   flowerList.addAll(c)
 //      list.addAll((dao.selectAllWithList()));
    }
@@ -75,9 +75,9 @@ public class ProductExplain extends JDialog{
       JLabel lblname = j.라벨만들기(product, f.font3, 200, 40, 250, 50, pnl);
       
       
-      JLabel lblproduct = j.라벨만들기(null, null, 50, 100, 400, 300, pnl);
+      JLabel lblproduct = j.라벨만들기(" ", f.font4, 50, 100, 400, 300, pnl);
       lblproduct.setIcon(icon);
-      lblproduct.setOpaque(true);
+//      lblproduct.setOpaque(true);
       
       
       

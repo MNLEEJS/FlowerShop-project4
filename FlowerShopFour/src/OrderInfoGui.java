@@ -101,34 +101,43 @@ public class OrderInfoGui extends JFrame {
 
 			final int index = i;
 
-			// 이미지 찾아오기
-			String code = Idao.findByNo(flowerDBlist.get(i).getImage_no()); // 주석해제 필수!
-			ImageIcon icon = IFI.ImageiconCreate(code);// 주석해제 필수!
+			int orderNo = orderNoList.get(i).getNo();
+			String orderImage = Idao.selectOrderImage(orderNo);
+			ImageIcon icon = IFI.ImageiconCreate(orderImage);
 
 			// 체크박스, 이미지 버튼 생성
 			checkboxList.add(j.체크박스만들기(10, y + 20, 50, 50, pnl));
 
+			// 상품의 번호를 가져옴
+
 			imgButtonList.add(j.버튼만들기("이미지", f.font5, 60, y, 100, 100, pnl));
 			imgButtonList.get(i).setIcon(icon);
-
 			// 상품 상세정보가 나오는 이미지 버튼
 			imgButtonList.get(i).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					ProductExplain PE = new ProductExplain(index);
+					List<Flower> list = dao.findBy("image_no", 0, null, orderNo);
+					String category = list.get(0).getCategory();
+					ProductExplain PE = new ProductExplain(category, index);
 
 					PE.setVisible(true);
 				}
 			});
 
-			// 상품의 번호를 가져옴
-			int orderNo = orderNoList.get(i).getNo();
-
-			// update(userSelectCount, orderDetailList.get(i).getNo());
 
 			// 상품의 상세정보를 담고있는 db정보
-			String product = flowerDBlist.get(i).getName();
-			int price = flowerDBlist.get(i).getPrice();
+			String product = "";
+			int price = 0;
+
+			for (Flower f : flowerDBlist) {
+
+				if (orderNoList.get(i).getFlowerNo() == f.getNo()) {
+					product = f.getName();
+					price = f.getPrice();
+					break;
+				}
+			}
+
 			productNameLblList.add(j.라벨만들기("상품명 : " + product, f.font5, 170, y, 200, 50, pnl));
 
 			// 추후 입력 받을 수량을 인덱스 안에 넣어줘야함
@@ -191,7 +200,7 @@ public class OrderInfoGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < 9; i++) {
+				for (int i = 0; i < checkboxList.size(); i++) {
 
 					checkboxList.get(i).setSelected(true);
 				}
@@ -204,7 +213,7 @@ public class OrderInfoGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < 9; i++) {
+				for (int i = 0; i < checkboxList.size(); i++) {
 
 					checkboxList.get(i).setSelected(false);
 				}
@@ -342,7 +351,7 @@ public class OrderInfoGui extends JFrame {
 
 	public static void main(String[] args) {
 
-		new OrderInfoGui("aaaa").setVisible(true);
+		new OrderInfoGui("").setVisible(true);
 
 	}
 }

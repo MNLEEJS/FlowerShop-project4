@@ -179,7 +179,7 @@ public class OrderInfoDAO {
 		}
 		return -1;
 	}
-
+	// 수정
 	// 고객이 주문한 정보 테이블(orderDetail)의 sellingCheck update 메소드
 	public int updateSellingCheck(int no) {
 		String sql = "UPDATE order_info\r\n" + "SET sellingCheck = 1\r\n" + "WHERE flowerorder_no IN (\r\n"
