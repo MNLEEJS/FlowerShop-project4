@@ -49,22 +49,31 @@ public class UserOrderInfo {
 
 	// 주문번호는 auto_increment로 자동 생성이라서 user_no만 insert값 넣음
 	public int insert(int user_no) {
-		String sql = "INSERT INTO UserOrder(user_no) VALUES (?);";
+		String sql = "INSERT INTO UserOrder_info (user_no) VALUES (?);";
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection("project3");
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, user_no);
 
-			return stmt.executeUpdate();
+			stmt.executeUpdate();
+			rs = stmt.getGeneratedKeys();
+			
+			long result = 0;
+			if (rs.next()) {
+				result = rs.getLong(1);
+			}
+			return (int)result;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			
 		} finally {
-			DBUtil.closeAll(null, stmt, conn);
+			DBUtil.closeAll(rs, stmt, conn);
 		}
 		return -1;
 	}

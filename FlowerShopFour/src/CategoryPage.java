@@ -27,6 +27,9 @@ public class CategoryPage extends JDialog {
 	ImageFileInsert imageFileInsert = new ImageFileInsert();
 	ImageDAO imageDAO = new ImageDAO();
 	OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+	UserOrderInfo userOrderInfo = new UserOrderInfo();
+	OrderInfoDAO orderInfoDAO = new OrderInfoDAO();
+	MemberInfo memberInfo = new MemberInfo();
 	// 이미지 버튼 리스트
 	List<JButton> listBtn = new ArrayList<JButton>();
 	// 체크박스 리스트
@@ -40,8 +43,6 @@ public class CategoryPage extends JDialog {
 	// 클래스 리스트
 	List<ListClass> listClass = new ArrayList<ListClass>();
 	Map<List<JPanel>, List<ListClass>> map;
-	// flower 테이블 where 활용 조회(조건 조회)해서 담는 리스트
-	List<Flower> flowerListWhere;
 	// 이전 버튼 리스트
 	// 패널 1 2 3까지 있을 때
 	// if (패널의 사이즈가 2보다 클때) 패널 1에 이전버튼 remove
@@ -49,12 +50,23 @@ public class CategoryPage extends JDialog {
 	// 다음 버튼 리스트
 	// 패널 3에 다음버튼 remove
 	List<JButton> listNext = new ArrayList<JButton>();
-	int o = 0;
+	// flower 테이블 where 활용 조회(조건 조회)해서 담는 리스트
+	List<Flower> flowerListWhere;
+	// Membership 테이블 정보를 담는 리스트
+	List<Membership> listMembership;
+	List<OrderDetail> listOrderDetail;
+	List<UserOrder> listUserOrder;
 	LoginUserInfo user;
+	int o = 0;
 
 	public CategoryPage(String category) {
+
 		setModal(true);
+
 		flowerListWhere = flowerdao.selectWhere(category);
+		listMembership = memberInfo.selectAll();
+		listOrderDetail = orderDetailDAO.selectAll();
+
 		int count = 0;
 		int pnlCount = flowerListWhere.size() / 6; // 패널의 갯수
 		int addPnl = flowerListWhere.size() % 6; // 추가 패널 생성할지 말지
@@ -67,14 +79,15 @@ public class CategoryPage extends JDialog {
 		JButton btnGoMain = j.버튼만들기("메인으로 가기", f.font4, 600, 20, 180, 50, pnl);
 
 		int productCount = 7;
-		// 패널의크기만큼 도는 for문
 		int countMan = 0;
+
 		if (pnlCount == 0 && addPnl > 0) {
 			pnlCount = 1;
+
 		} else {
 			countMan++;
 		}
-		System.out.println(pnlCount);
+
 		for (int k = 1; k < pnlCount + 1; k++) {
 			count++;
 
@@ -109,70 +122,72 @@ public class CategoryPage extends JDialog {
 			// 6개의 버튼, 체크박스, 라벨, 콤보박스 만드는 for문
 			for (int i = 1; i < productCount; i++) {
 				try {
-				String name = flowerListWhere.get(0).getName();
-				// 콤보박스 만들기
-				Integer[] counting = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-				JComboBox<Integer> comboBox = j.makeComboBox(counting, x4, y4, 70, 40, pnl1);
-				y4 += 250;
+					String name = flowerListWhere.get(0).getName();
+					// 콤보 박스 만들기
+					Integer[] counting = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+					JComboBox<Integer> comboBox = j.makeComboBox(counting, x4, y4, 70, 40, pnl1);
+					y4 += 250;
 
-				if (i % 2 == 0) {
-					y4 = 160;
-					x4 += 250;
-				}
-				listComboBox.add(comboBox);
-				comboBox.setEnabled(false); // 처음엔 콤보박스 비활성화 상태
-
-				// 체크박스 만들기
-				JCheckBox checkBox = j.체크박스만들기(x, y, 20, 20, pnl1);
-				y += 250;
-
-				if (i % 2 == 0) {
-					y = 65;
-					x += 250;
-				}
-				listChe.add(checkBox);
-
-				checkBox.addItemListener(new ItemListener() {
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						// 체크 박스 선택했을 때 해당 품목 콤보 박스가 활성화됨
-						if (e.getStateChange() == ItemEvent.SELECTED) {
-							comboBox.setEnabled(true);
-							// 체크 박스 해제했을 때 해당 품목 콤보 박스가 비활성화됨
-						} else {
-							comboBox.setEnabled(false);
-						}
+					if (i % 2 == 0) {
+						y4 = 160;
+						x4 += 250;
 					}
-				});
+					listComboBox.add(comboBox);
+					comboBox.setEnabled(false); // 화면을 처음 열었을 땐 콤보 박스 비활성화 상태
 
-				for (int a = 0; a < flowerListWhere.size(); a++) {
-					String code = imageDAO.findByNo(flowerListWhere.get(a).getImage_no());
-					ImageIcon icon = imageFileInsert.ImageiconCreate(code);
+					// 체크 박스 만들기
+					JCheckBox checkBox = j.체크박스만들기(x, y, 20, 20, pnl1);
+					y += 250;
 
-					// 이미지 버튼 만들기
-					JButton btnImage = j.버튼만들기("이미지", null, x1, y1, h, w, pnl1);
-					// 이미지 버튼에 이미지 넣기
-					btnImage.setIcon(icon);
-				}
-				y1 += 250;
+					if (i % 2 == 0) {
+						y = 65;
+						x += 250;
+					}
+					listChe.add(checkBox);
 
-				if (i % 2 == 0) {
-					y1 = 0;
-					x1 += 250;
-				}
+					// 체크 박스 선택 또는 해제 할 때
+					checkBox.addItemListener(new ItemListener() {
+						@Override
+						public void itemStateChanged(ItemEvent e) {
+							// 체크 박스 선택했을 때 해당 품목 콤보 박스가 활성화됨
+							if (e.getStateChange() == ItemEvent.SELECTED) {
+								comboBox.setEnabled(true);
 
-				// 라벨만들기
+							} else {
+								// 체크 박스 해제했을 때 해당 품목 콤보 박스가 비활성화됨
+								comboBox.setEnabled(false);
+							}
+						}
+					});
+
+					for (int a = 0; a < flowerListWhere.size(); a++) {
+						String code = imageDAO.findByNo(flowerListWhere.get(a).getImage_no());
+						ImageIcon icon = imageFileInsert.ImageiconCreate(code);
+
+						// 이미지 버튼 만들기
+						JButton btnImage = j.버튼만들기("이미지", null, x1, y1, h, w, pnl1);
+						// 이미지 버튼에 이미지 넣기
+						btnImage.setIcon(icon);
+					}
+					y1 += 250;
+
+					if (i % 2 == 0) {
+						y1 = 0;
+						x1 += 250;
+					}
+
+					// 라벨만들기
 //					String name = flowerListWhere.get(0).getName();
-				JLabel lblProduct = j.라벨만들기(name, f.font3, x2, y2, 200, 150, pnl1);
-				y2 += 250;
+					JLabel lblProduct = j.라벨만들기(name, f.font3, x2, y2, 200, 150, pnl1);
+					y2 += 250;
 
-				if (i % 2 == 0) {
-					y2 = 100;
-					x2 += 250;
-				}
-				// 메인에서 카테고리명이 적힌 버튼을 눌렀을 때 이 창이 뜸
-				// 버튼에 적힌 카테고리명에 따라 lblProduct의 텍스트도 바뀜
-				flowerListWhere.remove(0); // flowerList에서 remove 시키면서 다음걸 당겨옴
+					if (i % 2 == 0) {
+						y2 = 100;
+						x2 += 250;
+					}
+					// 메인에서 카테고리명이 적힌 버튼을 눌렀을 때 이 창이 뜸
+					// 버튼에 적힌 카테고리명에 따라 lblProduct의 텍스트도 바뀜
+					flowerListWhere.remove(0); // flowerListWhere에서 remove 시키면서 다음걸 당겨옴
 
 				} catch (Exception e) {
 					break;
@@ -199,6 +214,7 @@ public class CategoryPage extends JDialog {
 			add(pnl1);
 			pnl1.setBounds(0, 100, 800, 650);
 			pnl1.setLayout(null);
+
 			if (countMan > 0) {
 				// 리스트값만큼 돌리고 나머지만 돌리기 위한 조건
 				if (count == pnlCount) {
@@ -214,27 +230,50 @@ public class CategoryPage extends JDialog {
 			}
 			o++;
 		}
-//		flowerListWhere = flowerdao.selectWhere(category);
+		flowerListWhere = flowerdao.selectWhere(category);
 
 		// 상품과 수량까지 선택하고 장바구니 버튼 눌렀을때
-		// order_detail 테이블에 insert
+		// order_detail(주문상세내역) 테이블에 insert
+		// order_info(주문정보) 테이블에 insert
+		// userOrder_info(회원주문정보) 테이블에 insert
 		btnInCart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<LoginUserInfo> list = new ArrayList<LoginUserInfo>();
-				list.add(user);
-				if (list.get(0).getID() != null) {
-					for (int i = 0; i < flowerListWhere.size(); i++) {
+				List<LoginUserInfo> listLoginUserInfo = new ArrayList<LoginUserInfo>();
+				listLoginUserInfo.add(user);
 
+				int count = 0;
+				if (listLoginUserInfo.get(0).getID() != null) {
+
+					for (int i = 0; i < listComboBox.size(); i++) {
+
+						// i는 체크박스가 풀려있는거
 						if (listComboBox.get(i).getSelectedIndex() != 0) {
-							flowerListWhere.get(i).getNo();
 
-							orderDetailDAO.insert(flowerListWhere.get(i).getNo(),
+							// order_detail(주문상세내역) 테이블에 insert
+							List<Membership> list = new ArrayList<Membership>();
+							list.add(memberInfo.findByPk(user.getID(), 0, "ID"));
+
+							int flowerOrderNo = orderDetailDAO.insert(flowerListWhere.get(i).getNo(),
 									listComboBox.get(i).getSelectedIndex());
-							// i는 체크박스가 풀려있는거
+
+							// userOrder_info(회원주문정보) 테이블에 insert
+							int orderNo = userOrderInfo.insert(list.get(0).getNo());
+
+							// order_info(주문정보) 테이블에 insert
+							orderInfoDAO.insert(orderNo, flowerOrderNo, 0);
+
+							count++;
+
 						} else {
 							// 체크박스가 false 인것
 						}
+					}
+					if (count > 0) {
+						JOptionPane.showMessageDialog(null, "장바구니 추가 성공");
+
+					} else {
+						JOptionPane.showMessageDialog(null, "장바구니 추가 실패");
 					}
 
 				} else {
